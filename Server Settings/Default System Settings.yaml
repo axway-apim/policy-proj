@@ -1,0 +1,9 @@
+---
+type: SystemSettings
+fields:
+  name: Default System Settings
+  offerTlsServerName: false
+children:
+- type: EhcacheConfiguration
+  fields:
+    name: Ehcache Configuration

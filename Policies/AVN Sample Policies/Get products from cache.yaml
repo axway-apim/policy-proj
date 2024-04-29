@@ -1,0 +1,88 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Trace Filter
+  name: Get products from cache
+  description: ""
+children:
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceBody: true
+    name: Trace Filter
+  routing:
+    success: ../Create Lookup Key
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: CreateMessageKeyFilter
+  fields:
+    uniqueAttributeName: http.request.incoming.path
+    name: Create Lookup Key
+  routing:
+    success: ../Is query cached?
+  logging:
+    fatal: 'Error during message creation of message key from attribute. Error: ${circuit.exception}'
+    failure: Failure during creationo of message key from attribute.
+    success: Message key created from attribute.
+- type: IsCachedAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/Query results
+    name: Is query cached?
+  routing:
+    success: ../Set Results Filter
+    failure: ../Query DB
+  logging:
+    fatal: 'Error while looking for key in the  message attribiute cache. Error: ${circuit.exception}'
+    failure: Failure while looking for key in the message attribute cache.
+    success: Found the key in the message attribute cache.
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: query.results
+    attributeValue: ${content.body}
+    name: Set Results Filter
+  routing:
+    success: ../Set Message
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: ChangeMessageFilter
+  fields:
+    body: ${content.body}
+    outputContentType: application/json
+    name: Set Message
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: '/Policies/AVN Sample Policies/Get products from DB '
+    name: Query DB
+  routing:
+    success: ../Cache query results
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: CacheAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/Query results
+    name: Cache query results
+  routing:
+    success: ../Set Results Filter
+  logging:
+    fatal: 'Error while caching the message attribute. Error: ${circuit.exception}'
+    failure: Failed to cache the message attribute.
+    success: Cached the message attribute.

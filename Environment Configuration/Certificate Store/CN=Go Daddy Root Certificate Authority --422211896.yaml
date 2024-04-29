@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Go Daddy Root Certificate Authority - G2, O="GoDaddy.com, Inc.", L=Scottsdale, ST=Arizona, C=US
+  content: '{{file "CN=Go Daddy Root Certificate Authority --422211896-cert.pem"}}'

@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: OU=AC RAIZ FNMT-RCM, O=FNMT-RCM, C=ES
+  content: '{{file "OU=AC RAIZ FNMT-RCM, O=FNMT-RCM, C=ES-cert.pem"}}'

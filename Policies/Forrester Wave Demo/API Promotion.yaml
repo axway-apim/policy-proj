@@ -1,0 +1,111 @@
+---
+type: FilterCircuit
+fields:
+  start: ./JSON body
+  name: API Promotion
+  description: ""
+children:
+- type: ChangeMessageFilter
+  fields:
+    body: ${api.promotion}
+    outputContentType: application/json
+    name: JSON body
+  routing:
+    success: ../JSON Path
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: JSONPathFilter
+  fields:
+    name: JSON Path
+  routing:
+    success: ../Trace Filter
+    failure: ../False Filter
+  children:
+  - type: JSONPath
+    fields:
+      attributeName: tags
+      expression: $.frontend.apis[0].tags.nextStage
+      unmarshalType: com.fasterxml.jackson.databind.node.ArrayNode
+      failOnError: true
+- type: TraceFilter
+  fields:
+    traceMsg: |+
+      Tags --- ${tags}
+
+
+    traceLevel: 3
+    traceAttributes: false
+    name: Trace Filter
+  routing:
+    success: ../Set Attribute Filter
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: param
+    attributeValue: '{"parameter": [{"name":"host", "value":"maverick.demo.axway.com"}, {"name":"returnCodeMapping", "value":"10:0"},{"name":"stage", "value":${tags.elements().next()}}]}'
+    name: Set Attribute Filter
+  routing:
+    success: ../Create REST Request
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: CreateRESTRequestFilter
+  fields:
+    httpMethod: POST
+    name: Create REST Request
+  routing:
+    success: ../Call Jenkins
+  children:
+  - type: Property
+    fields:
+      name: json
+      value: ${param}
+- type: ConnectToURLFilter
+  fields:
+    url: https://jenkins.demo.axway.com/job/stock-watch-api-preprod/build
+    method: POST
+    profileInUse: true
+    profile: /External Connections/Auth Profiles/HTTP Basic/jenkins
+    caCerts: []
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Call Jenkins
+  routing:
+    success: ../Trace Filter{1}
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: TraceFilter
+  fields:
+    traceMsg: |-
+      ${http.response.info}
+
+      ${http.response.status}
+    traceLevel: 3
+    traceAttributes: false
+    traceBody: true
+    name: Trace Filter{1}
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: FalseFilter
+  fields:
+    name: False Filter
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""

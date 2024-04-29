@@ -1,0 +1,6 @@
+---
+type: Script
+fields:
+  name: Manipulate the Message Using the DOM API
+  description: Move the <enc:ReferenceList> to be before the <dsig:Signature>
+  script: '{{file "Manipulate the Message Using the DOM API.js"}}'

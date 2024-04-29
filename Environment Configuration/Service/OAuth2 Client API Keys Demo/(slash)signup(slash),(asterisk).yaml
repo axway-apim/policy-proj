@@ -1,0 +1,7 @@
+---
+type: StaticContent
+fields:
+  fileSystemPath: $VDISTDIR/samples/oauth/clientdemo/home/
+  generateIndex: true
+  indexfile: signup.html
+  uriprefix: /signup/

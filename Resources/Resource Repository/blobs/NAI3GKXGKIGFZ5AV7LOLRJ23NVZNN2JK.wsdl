@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://axway.com/BankingServices/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://axway.com/BankingServices/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://axway.com/BankingServices/">
+      <s:element name="FindAccountId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AccountName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindAccountIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FindAccountIdResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccountName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AccountID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccountNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAccountNameResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AccountBalance">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AccountID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AccountBalanceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AccountBalanceResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="testTimeout">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AccountID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="testTimeoutResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="testTimeoutResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="FindAccountIdSoapIn">
+    <wsdl:part name="parameters" element="tns:FindAccountId" />
+  </wsdl:message>
+  <wsdl:message name="FindAccountIdSoapOut">
+    <wsdl:part name="parameters" element="tns:FindAccountIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAccountNameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAccountName" />
+  </wsdl:message>
+  <wsdl:message name="GetAccountNameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAccountNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="AccountBalanceSoapIn">
+    <wsdl:part name="parameters" element="tns:AccountBalance" />
+  </wsdl:message>
+  <wsdl:message name="AccountBalanceSoapOut">
+    <wsdl:part name="parameters" element="tns:AccountBalanceResponse" />
+  </wsdl:message>
+  <wsdl:message name="testTimeoutSoapIn">
+    <wsdl:part name="parameters" element="tns:testTimeout" />
+  </wsdl:message>
+  <wsdl:message name="testTimeoutSoapOut">
+    <wsdl:part name="parameters" element="tns:testTimeoutResponse" />
+  </wsdl:message>
+  <wsdl:portType name="BankingServicesSoap">
+    <wsdl:operation name="FindAccountId">
+      <wsdl:input message="tns:FindAccountIdSoapIn" />
+      <wsdl:output message="tns:FindAccountIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAccountName">
+      <wsdl:input message="tns:GetAccountNameSoapIn" />
+      <wsdl:output message="tns:GetAccountNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AccountBalance">
+      <wsdl:input message="tns:AccountBalanceSoapIn" />
+      <wsdl:output message="tns:AccountBalanceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="testTimeout">
+      <wsdl:input message="tns:testTimeoutSoapIn" />
+      <wsdl:output message="tns:testTimeoutSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BankingServicesSoap" type="tns:BankingServicesSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="FindAccountId">
+      <soap:operation soapAction="http://axway.com/BankingServices/FindAccountId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccountName">
+      <soap:operation soapAction="http://axway.com/BankingServices/GetAccountName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AccountBalance">
+      <soap:operation soapAction="http://axway.com/BankingServices/AccountBalance" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="testTimeout">
+      <soap:operation soapAction="http://axway.com/BankingServices/testTimeout" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BankingServicesSoap12" type="tns:BankingServicesSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="FindAccountId">
+      <soap12:operation soapAction="http://axway.com/BankingServices/FindAccountId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccountName">
+      <soap12:operation soapAction="http://axway.com/BankingServices/GetAccountName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AccountBalance">
+      <soap12:operation soapAction="http://axway.com/BankingServices/AccountBalance" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="testTimeout">
+      <soap12:operation soapAction="http://axway.com/BankingServices/testTimeout" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BankingServices">
+    <wsdl:port name="BankingServicesSoap" binding="tns:BankingServicesSoap">
+      <soap:address location="http://localhost:31219/BankingDemo.asmx" />
+    </wsdl:port>
+    <wsdl:port name="BankingServicesSoap12" binding="tns:BankingServicesSoap12">
+      <soap12:address location="http://localhost:31219/BankingDemo.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

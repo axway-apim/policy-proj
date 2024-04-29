@@ -1,0 +1,10 @@
+---
+type: KPSReadWriteStore
+fields:
+  key: name
+  readKey: ""
+  name: backendConfig
+  description: Configuration parameters
+  type: /Environment Configuration/Key Property Stores/Config/Type Group/backendConfig
+  dataSource: /null
+  aliases: config

@@ -1,0 +1,33 @@
+---
+type: FilterCircuit
+fields:
+  start: ./1.Configure XML-Encryption Settings
+  name: Encrypt
+  description: ""
+children:
+- type: SetEncryptionPropertiesFilter
+  fields:
+    nodesToEncrypt: /Resources/XPath Definitions/Signing XPaths/PriceNode
+    extractNodeListAttributeName: node.list
+    symmetricKeyAttribute: symmetric.key
+    symmetricKeyEmbedMethod: 1
+    name: 1.Configure XML-Encryption Settings
+  routing:
+    success: ../2.Apply XML Encryption
+  logging:
+    fatal: 'Error occurred while setting the XML encryption. Error: ${circuit.exception}'
+    failure: Setting XML encryption properties failed
+    success: Setting XML encryption properties passed
+  children:
+  - type: KeyInfoFormat
+    fields:
+      keyNameValue: ""
+      keyNameType: []
+      certAttachmentId: ""
+- type: XMLEncryptionFilter
+  fields:
+    name: 2.Apply XML Encryption
+  logging:
+    fatal: 'Error occurred during XML encryption. Error: ${circuit.exception}'
+    failure: XML encryption failed
+    success: XML encryption passed

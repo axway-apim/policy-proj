@@ -1,0 +1,86 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Read API Proxy
+  name: IP Whitelisting
+  description: IP whitelisting using KPS table ipwlsvc
+children:
+- type: PortalApiProxyReadFilter
+  fields:
+    idSelector: ${api.id}
+    name: Read API Proxy
+  routing:
+    success: ../Set Lookup
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: ServiceId
+    attributeValue: ${apimgmt.apiproxy.name}_${apimgmt.apiproxy.apiVersion}
+    name: Set Lookup
+  routing:
+    success: ../Trace Filter
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: TraceFilter
+  fields:
+    traceMsg: 'AVN: ${apimgmt.apiproxy.name}_${apimgmt.apiproxy.apiVersion}'
+    traceBody: true
+    name: Trace Filter
+  routing:
+    success: ../Lookup Service IP Range
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: IpRange
+    attributeValue: ${kps.ipwlsvc[ServiceId].IpRange}
+    name: Lookup Service IP Range
+  routing:
+    success: ../Evaluate Selector
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SelectorFilter
+  fields:
+    expression: ${empty IpRange}
+    name: Evaluate Selector
+  routing:
+    failure: ../Set Error body
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.body
+    attributeValue: '{"Error": "Your IP is forbidden"}'
+    name: Set Error body
+  routing:
+    success: ../Set HTTP error status
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.http.code
+    attributeValue: 403
+    name: Set HTTP error status
+  routing:
+    success: ../Validate Service IP Range
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Validate Service IP Range
+    script: '{{file "IP Whitelisting-Files/Validate Service IP Range.groovy"}}'
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter

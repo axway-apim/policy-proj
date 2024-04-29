@@ -1,0 +1,6 @@
+---
+type: StaticFile
+fields:
+  file: $VDISTDIR/webapps/emc/favicon.ico
+  uriprefix: /favicon.ico
+  httpMethod: GET

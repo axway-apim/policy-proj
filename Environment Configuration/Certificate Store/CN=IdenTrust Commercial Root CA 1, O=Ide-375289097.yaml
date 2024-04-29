@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=IdenTrust Commercial Root CA 1, O=IdenTrust, C=US
+  content: '{{file "CN=IdenTrust Commercial Root CA 1, O=Ide-375289097-cert.pem"}}'

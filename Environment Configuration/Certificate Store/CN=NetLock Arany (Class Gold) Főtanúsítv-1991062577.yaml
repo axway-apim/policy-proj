@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=NetLock Arany (Class Gold) Főtanúsítvány, OU=Tanúsítványkiadók (Certification Services), O=NetLock Kft., L=Budapest, C=HU
+  content: '{{file "CN=NetLock Arany (Class Gold) Főtanúsítv-1991062577-cert.pem"}}'

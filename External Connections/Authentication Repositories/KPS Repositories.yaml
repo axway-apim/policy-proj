@@ -1,0 +1,16 @@
+---
+type: AuthnRepositoryKPSGroup
+fields:
+  allowedFilter:
+  - HttpBasicFilter
+  - WsBasicFilter
+  - WsUsernameFilter
+  - AttributeAuthnFilter
+  - FormAuthnFilter
+  name: KPS Repositories
+children:
+- type: AuthnRepositoryKPS
+  fields:
+    kpsAlias: heroes
+    secretField: password
+    name: Heroes

@@ -1,0 +1,10 @@
+---
+ASESecurity:
+  ASE_Request_Connecter:
+    Connect_to_ASE_Request:
+      url: http://208.67.129.14:7777/ase/request
+    Set_ASE_Token:
+      attributeValue: ae01e485c1324f19925ec774e8c1ae84
+  ASE_Response_Connecter:
+    Connect_to_ASE_Response:
+      url: http://208.67.129.14:7777/ase/response

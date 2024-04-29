@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=TWCA Global Root CA, OU=Root CA, O=TAIWAN-CA, C=TW
+  content: '{{file "CN=TWCA Global Root CA, OU=Root CA, O=TA-1385336979-cert.pem"}}'

@@ -1,0 +1,11 @@
+---
+type: AmaModule
+fields:
+  enabled: true
+  networkBrokerGroupId: ""
+  networkBrokerGroupLogin: ""
+  networkBrokerGroupPassword: ""
+  hostnameVerificationEnabled: false
+  SSLTrustedCerts: []
+  SSLCipherSuite: ""
+  name: AMA loadable module

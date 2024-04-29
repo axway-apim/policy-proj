@@ -1,0 +1,90 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Set URL
+  name: Get Azure JWK
+  description: ""
+children:
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: jwk.key.url
+    attributeValue: https://login.microsoftonline.com/<Azure client ID>/discovery/v2.0/keys
+    name: Set URL
+  routing:
+    success: ../Create JWK Lookup Key
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: CreateMessageKeyFilter
+  fields:
+    uniqueAttributeName: jwk.key.url
+    name: Create JWK Lookup Key
+  routing:
+    success: ../Is JWK cached?
+  logging:
+    fatal: 'Error during message creation of message key from attribute. Error: ${circuit.exception}'
+    failure: Failure during creationo of message key from attribute.
+    success: Message key created from attribute.
+- type: IsCachedAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/Azure
+    name: Is JWK cached?
+  routing:
+    success: ../Set JWK Payload
+    failure: ../Get JWK
+  logging:
+    fatal: 'Error while looking for key in the  message attribiute cache. Error: ${circuit.exception}'
+    failure: Failure while looking for key in the message attribute cache.
+    success: Found the key in the message attribute cache.
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: jwk
+    attributeValue: ${content.body}
+    name: Set JWK Payload
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: ConnectToURLFilter
+  fields:
+    url: ${jwk.key.url}
+    method: GET
+    caCerts: []
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Get JWK
+  routing:
+    success: ../Set response to application/json
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: ChangeMessageFilter
+  fields:
+    body: ${content.body}
+    outputContentType: application/json
+    name: Set response to application/json
+  routing:
+    success: ../Cache JWK Info
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: CacheAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/Azure
+    name: Cache JWK Info
+  routing:
+    success: ../Set JWK Payload
+  logging:
+    fatal: 'Error while caching the message attribute. Error: ${circuit.exception}'
+    failure: Failed to cache the message attribute.
+    success: Cached the message attribute.

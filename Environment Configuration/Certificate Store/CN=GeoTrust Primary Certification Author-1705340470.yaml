@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=GeoTrust Primary Certification Authority - G3, OU=(c) 2008 GeoTrust Inc. - For authorized use only, O=GeoTrust Inc., C=US
+  content: '{{file "CN=GeoTrust Primary Certification Author-1705340470-cert.pem"}}'

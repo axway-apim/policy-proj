@@ -1,0 +1,5 @@
+---
+type: Cache
+fields:
+  name: Kerberos Constrained Delegation Impersonated Subject Cache
+  eternal: true

@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Global Chambersign Root - 2008, O=AC Camerfirma S.A., SERIALNUMBER=A82743287, L=Madrid (see current address at www.camerfirma.com/address), C=EU
+  content: '{{file "CN=Global Chambersign Root - 2008, O=AC -1789920841-cert.pem"}}'

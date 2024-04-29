@@ -1,0 +1,5 @@
+---
+type: Cache
+fields:
+  name: Kerberos Transport-Level Cookies
+  eternal: true

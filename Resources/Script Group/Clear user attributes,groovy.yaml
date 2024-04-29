@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Clear user attributes
+  description: Clears all of the attributes assigned to a user
+  engineName: groovy
+  script: '{{file "Clear user attributes.groovy"}}'

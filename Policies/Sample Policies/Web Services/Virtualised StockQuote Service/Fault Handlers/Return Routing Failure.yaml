@@ -1,0 +1,38 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Set Failure Data
+  name: Return Routing Failure
+  description: When Routing to Axis fails
+  category: /System/Policy Categories/content-filtering
+children:
+- type: CopyAttributeFilter
+  fields:
+    name: Set Failure Data
+  routing:
+    success: ../False Filter
+  logging:
+    fatal: 'Error occurred while copying attributes. Error: ${circuit.exception}'
+    failure: Failed to copy attributes
+    success: Copied attributes successfully
+  children:
+  - type: CopyAttribute
+    fields:
+      fromAttributeName: ""
+      toAttributeName: error.code
+      attributeValue: Error Code 100
+      fromAttributeLocation: 3
+  - type: CopyAttribute
+    fields:
+      fromAttributeName: ""
+      toAttributeName: error.message
+      attributeValue: 'Error Message: Routing to target server failed'
+      fromAttributeLocation: 3
+- type: FalseFilter
+  fields:
+    name: False Filter
+  logging:
+    maskType: FILTER
+    mask: 0
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""

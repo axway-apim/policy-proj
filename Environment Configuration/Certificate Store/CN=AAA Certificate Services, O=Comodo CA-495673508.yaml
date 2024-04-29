@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=AAA Certificate Services, O=Comodo CA Limited, L=Salford, ST=Greater Manchester, C=GB
+  content: '{{file "CN=AAA Certificate Services, O=Comodo CA-495673508-cert.pem"}}'

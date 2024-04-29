@@ -1,0 +1,59 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Check Session
+  name: Is Logged In
+  description: ""
+children:
+- type: CheckSessionFilter
+  fields:
+    cookie: CLIENTCOOKIE
+    name: Check Session
+  routing:
+    success: ../If auth sub id in session represents user
+    failure: ../Remove Cookie Header
+- type: IsCachedAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/HTTP Sessions
+    keyAttributeName: authentication.subject.id
+    name: If auth sub id in session represents user
+  routing:
+    success: ../Remove Cookie Header-2
+    failure: ../Remove Cookie Header
+  logging:
+    fatal: 'Error while looking for key in the  message attribiute cache. Error: ${circuit.exception}'
+    failure: Failure while looking for key in the message attribute cache.
+    success: Found the key in the message attribute cache.
+- type: RemoveHTTPHeaderFilter
+  fields:
+    headerName: Cookie
+    name: Remove Cookie Header-2
+  routing:
+    success: ../True Filter
+  logging:
+    fatal: 'Error in removing the HTTP header from the message. Error: ${circuit.exception}'
+    failure: Failed in removing the HTTP header from the message
+    success: Success in removing the HTTP header from the message
+- type: TrueFilter
+  fields:
+    name: True Filter
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: RemoveHTTPHeaderFilter
+  fields:
+    headerName: Cookie
+    name: Remove Cookie Header
+  routing:
+    success: ../False Filter
+  logging:
+    fatal: 'Error in removing the HTTP header from the message. Error: ${circuit.exception}'
+    failure: Failed in removing the HTTP header from the message
+    success: Success in removing the HTTP header from the message
+- type: FalseFilter
+  fields:
+    name: False Filter
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""

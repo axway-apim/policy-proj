@@ -1,0 +1,23 @@
+---
+type: KPSType
+fields:
+  name: userConfig
+children:
+- type: KPSTypeProperty
+  fields:
+    name: password
+    type: java.lang.String
+    key: ""
+    value: ""
+- type: KPSTypeProperty
+  fields:
+    name: username
+    type: java.lang.String
+    key: ""
+    value: ""
+- type: KPSTypeProperty
+  fields:
+    name: desc
+    type: java.lang.String
+    key: ""
+    value: ""

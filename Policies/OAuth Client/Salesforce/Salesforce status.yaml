@@ -1,0 +1,64 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call 'Is logged in
+  name: Salesforce status
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/OAuth Client/Session Management/Is Logged In
+    name: Call 'Is logged in
+  routing:
+    success: ../Retrieve OAuth Client Access Token From Token Storage
+    failure: ../Redirect to login
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: RetrieveTokenFromStorageFilter
+  fields:
+    profile: /External Connections/Auth Profiles/OAuth2/SalesForce/salesforce jwt app
+    name: Retrieve OAuth Client Access Token From Token Storage
+  routing:
+    success: ../Check available tokens
+    failure: ../Check available tokens
+- type: JavaScriptFilter
+  fields:
+    engineName: jython
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Check available tokens
+    script: '{{file "Salesforce status-Files/Check available tokens.py"}}'
+  routing:
+    success: ../Build JSON response
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: ChangeMessageFilter
+  fields:
+    body: '{"authorised":${authorized} }'
+    outputContentType: application/json
+    name: Build JSON response
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /client/logout/
+    outputContentType: text/html
+    content: fail
+    name: Redirect to login

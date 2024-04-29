@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Entrust.net Certification Authority (2048), OU=(c) 1999 Entrust.net Limited, OU=www.entrust.net/CPS_2048 incorp. by ref. (limits liab.), O=Entrust.net
+  content: '{{file "CN=Entrust.net Certification Authority (-942657134-cert.pem"}}'

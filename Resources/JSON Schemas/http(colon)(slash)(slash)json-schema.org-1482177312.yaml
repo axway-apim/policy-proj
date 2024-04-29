@@ -1,0 +1,5 @@
+---
+type: JSONSchema
+fields:
+  URL: http://json-schema.org/calendar
+  contents: '{{file "http(colon)(slash)(slash)json-schema.org-1482177312.json"}}'

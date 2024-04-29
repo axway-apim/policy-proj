@@ -1,0 +1,27 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Initialize attributes
+  name: Set Global Data
+  description: Initializes error.code and error.message to default values
+children:
+- type: CopyAttributeFilter
+  fields:
+    name: Initialize attributes
+  logging:
+    fatal: 'Error occurred while copying attributes. Error: ${circuit.exception}'
+    failure: Failed to copy attributes
+    success: Copied attributes successfully
+  children:
+  - type: CopyAttribute
+    fields:
+      fromAttributeName: ""
+      toAttributeName: error.code
+      attributeValue: '000'
+      fromAttributeLocation: 3
+  - type: CopyAttribute
+    fields:
+      fromAttributeName: ""
+      toAttributeName: error.message
+      attributeValue: Generic Error Occurred
+      fromAttributeLocation: 3

@@ -1,0 +1,5 @@
+---
+type: JSONSchema
+fields:
+  URL: http://json-schema.org/geo
+  contents: '{{file "http(colon)(slash)(slash)json-schema.org-1806026863.json"}}'

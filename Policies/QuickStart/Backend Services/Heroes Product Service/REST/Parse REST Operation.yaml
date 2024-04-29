@@ -1,0 +1,28 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Switch on Attribute Value
+  name: Parse REST Operation
+  description: ""
+children:
+- type: SwitchFilter
+  fields:
+    attributeName: ${http.request.verb}
+    defaultOption: RETURN_FALSE
+    defaultCircuit: /null
+    name: Switch on Attribute Value
+  children:
+  - type: SwitchCircuitReference
+    fields:
+      comparatorType: is
+      compareWith: GET
+      name: Id-0001347371498253-ffffffff851382a0-1
+      priority: 0
+      circuitPK: /Policies/QuickStart/Backend Services/Heroes Product Service/REST/GetProducts
+  - type: SwitchCircuitReference
+    fields:
+      comparatorType: is
+      compareWith: POST
+      name: Id-0001347371527094-ffffffff8338a012-1
+      priority: 1
+      circuitPK: /Policies/QuickStart/Backend Services/Heroes Product Service/REST/OrderProduct

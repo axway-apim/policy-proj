@@ -1,0 +1,52 @@
+---
+type: OAuthProviderProfile
+fields:
+  name: API Gateway
+  authzUrl: https://${env.OAUTH.SERVER}:${env.PORT.OAUTH2.SERVICES}/api/oauth/authorize
+  tokenUrl: https://${env.OAUTH.SERVER}:${env.PORT.OAUTH2.SERVICES}/api/oauth/token
+  tokenStore: /Libraries/OAuth2 Stores/Client Access Token Stores/OAuth Client Access Token Store
+children:
+- type: OAuthAppProfile
+  fields:
+    clientid: SampleConfidentialApp
+    clientsecret: NjgwOGQ0YjYtZWYwOS00YjBkLThmMjgtM2IwNWRhOWM0OGVj
+    redirectURL: https://localhost:8088/oauth_callback
+    name: Sample Confidential App
+  children:
+  - type: ScopeList
+    fields:
+      name: resource.WRITE
+- type: OAuthAppProfile
+  fields:
+    clientid: ClientConfidentialApp
+    clientsecret: OWNiNzZkODAtMWJjMi00OGQzLThkMzEtZWRlZWMwZmRkZjZj
+    locationOfClientDetails: QueryString
+    redirectURL: https://${env.OAUTH.CLIENT}:${env.PORT.OAUTH2.CLIENT}/client/apigateway/callback
+    driftTime: 1
+    name: Sample Client Authzcode App
+  children:
+  - type: ScopeList
+    fields:
+      name: resource.WRITE
+  - type: ScopeList
+    fields:
+      name: openid
+- type: OAuthAppProfile
+  fields:
+    clientid: ClientConfidentialApp
+    clientsecret: OWNiNzZkODAtMWJjMi00OGQzLThkMzEtZWRlZWMwZmRkZjZj
+    oauthFlowType: client_credentials
+    locationOfClientDetails: QueryString
+    redirectURL: ""
+    driftTime: 1
+    name: Sample Client Credentials App
+  children:
+  - type: ScopeList
+    fields:
+      name: https://localhost:8090/auth/userinfo.email
+  - type: ScopeList
+    fields:
+      name: resource.READ
+  - type: ScopeList
+    fields:
+      name: https://localhost:8090/auth/user.photos

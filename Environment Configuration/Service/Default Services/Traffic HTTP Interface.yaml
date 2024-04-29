@@ -1,0 +1,6 @@
+---
+type: InetInterface
+fields:
+  name: Traffic HTTP Interface
+  port: ${env.PORT.TRAFFIC}
+  wafProfile: /Libraries/Threat Protection Profiles/WAF

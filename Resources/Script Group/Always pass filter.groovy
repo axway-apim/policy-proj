@@ -1,0 +1,1 @@
+def invoke(msg)         {            return true;         }

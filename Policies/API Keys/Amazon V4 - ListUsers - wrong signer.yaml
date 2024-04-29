@@ -1,0 +1,27 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Connect to URL
+  name: Amazon V4 - ListUsers - wrong signer
+  description: ""
+children:
+- type: ConnectToURLFilter
+  fields:
+    url: https://iam.amazonaws.com/?Action=ListUsers
+    profile: /External Connections/Auth Profiles/API Keys/Amazon AWS V2 Signing/QA Amazon Account V2
+    caCerts: []
+    ciphers: DEFAULT
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Connect to URL
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details

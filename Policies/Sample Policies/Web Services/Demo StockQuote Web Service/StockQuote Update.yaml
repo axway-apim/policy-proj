@@ -1,0 +1,26 @@
+---
+type: FilterCircuit
+fields:
+  start: ./1. Retrieve StockQuote Symbol
+  name: StockQuote Update
+  description: ""
+children:
+- type: AttributeExtractXPathFilter
+  fields:
+    attributeLocation: /Resources/XPath Definitions/Attribute Locations/symbol
+    attributeName: stockquote.symbol
+    name: 1. Retrieve StockQuote Symbol
+  routing:
+    success: ../2. Set HTTP Response Code to 202 (Accepted)
+  logging:
+    fatal: 'Error occurred while extracting attributes via XPath. Error: ${circuit.exception}'
+    failure: Failed to extract attributes via XPath
+    success: Extracted attribute from message via XPath
+- type: Reflector
+  fields:
+    httpResponseStatus: 202
+    name: 2. Set HTTP Response Code to 202 (Accepted)
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

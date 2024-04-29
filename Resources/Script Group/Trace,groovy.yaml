@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Trace
+  description: Output trace statements
+  engineName: groovy
+  script: '{{file "Trace.groovy"}}'

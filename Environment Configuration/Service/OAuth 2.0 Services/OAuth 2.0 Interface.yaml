@@ -1,0 +1,18 @@
+---
+type: SSLInterface
+fields:
+  serverCert: /Environment Configuration/Certificate Store/newdemocert
+  caCert: []
+  ciphers: FIPS:!SSLv3:!aNULL
+  ssloptions: nosslv3
+  resolveSubjectCNtoNetAddr: false
+  name: OAuth 2.0 Interface
+  port: ${env.PORT.OAUTH2.SERVICES}
+  maxRequestMemory: 16777216
+  opsSettingsUsage: PORT
+  recordInboundTxns: false
+  recordOutboundTxns: false
+  recordCircuitPath: false
+  recordTrace: false
+  recordSent: false
+  recordReceived: false

@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Always pass filter
+  description: Always pass
+  engineName: jython
+  script: '{{file "Always pass filter.py"}}'

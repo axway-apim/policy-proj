@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Certum CA, O=Unizeto Sp. z o.o., C=PL
+  content: '{{file "CN=Certum CA, O=Unizeto Sp. z o.o., C=PL-cert.pem"}}'

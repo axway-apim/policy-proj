@@ -1,0 +1,20 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call Okta Validation
+  fault: ./API Manager Handler
+  name: Okta as IDP
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Okta/Validate OKTA Token - New
+    name: Call Okta Validation
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: GenericFaultFilter
+  fields:
+    faultString: Security failure
+    name: API Manager Handler

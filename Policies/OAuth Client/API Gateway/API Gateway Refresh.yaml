@@ -1,0 +1,76 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call 'Is Logged In'
+  name: API Gateway Refresh
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/OAuth Client/Session Management/Is Logged In
+    name: Call 'Is Logged In'
+  routing:
+    success: ../Refresh OAuth Client Access Token
+    failure: ../Redirect to Login Page
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: RefreshTokenFilter
+  fields:
+    profile: /External Connections/Auth Profiles/OAuth2/API Gateway/Sample Client Authzcode App
+    name: Refresh OAuth Client Access Token
+  routing:
+    success: ../Success Message
+    failure: ../Fail Message
+  children:
+  - type: ConnectionFilter
+    fields:
+      caCerts: []
+      ciphers: DEFAULT
+      ssloptions:
+      - nosslv2
+      - nosslv3
+      - notlsv1
+      - notlsv1_1
+      name: Connection Details
+    children:
+    - type: SaveToFileFilter
+      fields:
+        name: Persistence Details
+- type: ChangeMessageFilter
+  fields:
+    body: '{"refresh":true}'
+    outputContentType: application/json
+    name: Success Message
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: ChangeMessageFilter
+  fields:
+    body: '{"refresh":true}'
+    outputContentType: application/json
+    name: Fail Message
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /client/logout/
+    outputContentType: text/html
+    content: fail
+    name: Redirect to Login Page

@@ -1,0 +1,6 @@
+---
+type: StaticContent
+fields:
+  fileSystemPath: $VDISTDIR/webapps/quickstart/
+  generateIndex: true
+  uriprefix: /quickstart

@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Fail filter
+  description: Always fail
+  engineName: nashorn
+  script: '{{file "Fail filter.nashorn.js"}}'

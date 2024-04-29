@@ -1,0 +1,10 @@
+---
+type: CassandraSettings
+fields:
+  name: Cassandra Settings
+  sslTrustedCerts: []
+  sslCipherSuite: ""
+children:
+- type: CassandraServer
+  fields:
+    name: Local Cassandra Server

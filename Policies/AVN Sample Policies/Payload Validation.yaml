@@ -1,0 +1,111 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Is HTTP Method 'GET' or 'OPTIONS' or 'DELETE'?
+  name: Payload Validation
+  description: Main security policy
+  category: /System/Policy Categories/security
+children:
+- type: SelectorFilter
+  fields:
+    expression: ${http.request.verb.equalsIgnoreCase("get")||http.request.verb.equalsIgnoreCase("options")||http.request.verb.equalsIgnoreCase("delete")}
+    name: Is HTTP Method 'GET' or 'OPTIONS' or 'DELETE'?
+  routing:
+    success: ../Proceed
+    failure: ../Check Message Size
+- type: TrueFilter
+  fields:
+    name: Proceed
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: MessageSizeFilter
+  fields:
+    atLeastSize: 0
+    atMostSize: 10000000
+    name: Check Message Size
+  routing:
+    success: ../Allow SOAP and REST content-types (with attachments) only
+    failure: ../Message size exceeded
+  logging:
+    fatal: 'Error during message size filtering. Error: ${circuit.exception}'
+    failure: Failed message size filtering
+    success: Passed message size filtering
+- type: MimeTypeFilter
+  fields:
+    allowAttachments: false
+    name: Allow SOAP and REST content-types (with attachments) only
+  routing:
+    success: ../Proceed
+    failure: ../Invalid Content Type
+  logging:
+    fatal: 'Error during attachment filtering. Error: ${circuit.exception}'
+    failure: Request failed attachment filtering
+    success: Request passed attachment filtering
+  children:
+  - type: MimeType
+    fields:
+      mimeType: multipart/*
+      extension: ""
+  - type: MimeType
+    fields:
+      mimeType: application/*+xml
+      extension: ""
+  - type: MimeType
+    fields:
+      mimeType: application/json
+      extension: .json
+  - type: MimeType
+    fields:
+      mimeType: application/xml
+      extension: ""
+  - type: MimeType
+    fields:
+      mimeType: text/xml*
+      extension: ""
+  - type: MimeType
+    fields:
+      mimeType: application/xml*
+      extension: ""
+  - type: MimeType
+    fields:
+      mimeType: text/xml
+      extension: .xml
+  - type: MimeType
+    fields:
+      mimeType: application/x-www-form-urlencoded
+      extension: ""
+  - type: MimeType
+    fields:
+      mimeType: application/octet-stream
+      extension: ""
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: circuit.failure.reason
+    attributeValue: Invalid content type
+    name: Invalid Content Type
+  routing:
+    success: ../Abort
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: ExceptionFilter
+  fields:
+    name: Abort
+  logging:
+    fatal: 'Error in calling exception filter. Error: ${circuit.exception}'
+    failure: Failure in exception filter
+    success: Success in exception filter
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: circuit.failure.reason
+    attributeValue: Message size exceeded
+    name: Message size exceeded
+  routing:
+    success: ../Abort
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value

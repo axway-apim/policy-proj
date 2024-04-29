@@ -1,0 +1,49 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Check Session
+  name: Get Local User Info
+  description: ""
+children:
+- type: CheckSessionFilter
+  fields:
+    cookie: CLIENTCOOKIE
+    name: Check Session
+  routing:
+    success: ../Remove Cookie Header
+- type: RemoveHTTPHeaderFilter
+  fields:
+    headerName: Cookie
+    name: Remove Cookie Header
+  routing:
+    success: ../Check User Store
+  logging:
+    fatal: 'Error in removing the HTTP header from the message. Error: ${circuit.exception}'
+    failure: Failed in removing the HTTP header from the message
+    success: Success in removing the HTTP header from the message
+- type: IsCachedAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/HTTP Sessions
+    keyAttributeName: authentication.subject.id
+    name: Check User Store
+  routing:
+    success: ../Reflect Message
+    failure: ../HTTP Redirect
+  logging:
+    fatal: 'Error while looking for key in the  message attribiute cache. Error: ${circuit.exception}'
+    failure: Failure while looking for key in the message attribute cache.
+    success: Found the key in the message attribute cache.
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /login/
+    outputContentType: text/html
+    content: login redirect
+    name: HTTP Redirect

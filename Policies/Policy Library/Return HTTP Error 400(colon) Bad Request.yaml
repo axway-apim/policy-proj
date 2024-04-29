@@ -1,0 +1,38 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Make the "Bad Request" Message
+  name: 'Return HTTP Error 400: Bad Request'
+  description: ""
+children:
+- type: ChangeMessageFilter
+  fields:
+    body: Bad Request
+    outputContentType: text/html
+    name: Make the "Bad Request" Message
+  routing:
+    success: ../Pass the "Bad Request" message back
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 400
+    name: Pass the "Bad Request" message back
+  routing:
+    success: ../Flag as blocked message
+  logging:
+    maskType: FILTER
+    mask: 6
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message to IP Address ${http.request.clientaddr}
+- type: SetResponseStatusFilter
+  fields:
+    responseStatus: 3
+    name: Flag as blocked message
+  logging:
+    fatal: 'SetResponseStatusFilter error. Error: ${circuit.exception}'
+    failure: Failed to set the response status
+    success: Successfully set the response status

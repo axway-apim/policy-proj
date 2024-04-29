@@ -1,0 +1,58 @@
+---
+type: WebService
+fields:
+  name: BankingServices
+  resourceSetID: JJ33KYFQ6WETWNKGCRBV5UIF4TEITYVJ
+children:
+- type: OperationList
+  fields:
+    name: '{http://axway.com/BankingServices/}BankingServices'
+  children:
+  - type: Operation
+    fields:
+      bindingName: '{http://axway.com/BankingServices/}BankingServicesSoap12'
+      bindingOperation: GetAccountName
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://axway.com/BankingServices/}BankingServicesSoap'
+      bindingOperation: FindAccountId
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://axway.com/BankingServices/}BankingServicesSoap12'
+      bindingOperation: testTimeout
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://axway.com/BankingServices/}BankingServicesSoap'
+      bindingOperation: testTimeout
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://axway.com/BankingServices/}BankingServicesSoap'
+      bindingOperation: GetAccountName
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://axway.com/BankingServices/}BankingServicesSoap12'
+      bindingOperation: FindAccountId
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://axway.com/BankingServices/}BankingServicesSoap'
+      bindingOperation: AccountBalance
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://axway.com/BankingServices/}BankingServicesSoap12'
+      bindingOperation: AccountBalance
+      bindingInput: null
+      bindingOutput: null

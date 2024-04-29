@@ -1,0 +1,65 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Evaluate Selector
+  fault: ./Set Attribute Filter
+  name: Global Fault Handler
+  description: ""
+children:
+- type: SelectorFilter
+  fields:
+    expression: ${empty error.http.code}
+    name: Evaluate Selector
+  routing:
+    success: ../Set generic error code
+    failure: ../Set Message
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.http.code
+    attributeValue: 400
+    name: Set generic error code
+  routing:
+    success: ../Set generic error
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.body
+    attributeValue: '{"Error": "There was an error"}'
+    name: Set generic error
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: Reflector
+  fields:
+    httpResponseStatus: ${error.http.code}
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: ChangeMessageFilter
+  fields:
+    body: ${error.body}
+    outputContentType: application/json
+    name: Set Message
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: special.error
+    attributeValue: '{}'
+    name: Set Attribute Filter
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value

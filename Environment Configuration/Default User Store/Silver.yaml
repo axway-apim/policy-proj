@@ -1,0 +1,8 @@
+---
+type: Group
+fields:
+  member:
+  - /Environment Configuration/Default User Store/Sam
+  - /Environment Configuration/Default User Store/Sarah
+  - /Environment Configuration/Default User Store/Steve
+  name: Silver

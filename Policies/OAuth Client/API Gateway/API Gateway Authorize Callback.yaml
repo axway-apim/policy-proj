@@ -1,0 +1,180 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call 'Is Logged In'
+  name: API Gateway Authorize Callback
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/OAuth Client/Session Management/Is Logged In
+    name: Call 'Is Logged In'
+  routing:
+    success: ../Exchange Authorization Code for Token
+    failure: ../Exchange Authorization Code for Token and ID Token
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: GetOAuthClientTokenFilter
+  fields:
+    profile: /External Connections/Auth Profiles/OAuth2/API Gateway/Sample Client Authzcode App
+    name: Exchange Authorization Code for Token
+  routing:
+    success: ../Redirect to Client app home page
+  children:
+  - type: ConnectionFilter
+    fields:
+      caCerts: []
+      ciphers: DEFAULT
+      ssloptions:
+      - nosslv2
+      - nosslv3
+      - notlsv1
+      - notlsv1_1
+      name: Connection Details
+    children:
+    - type: SaveToFileFilter
+      fields:
+        name: Persistence Details
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: https://${env.OAUTH.CLIENT}:${env.PORT.OAUTH2.CLIENT}/client
+    outputContentType: text/html
+    content: redirect
+    name: Redirect to Client app home page
+- type: GetOAuthClientTokenFilter
+  fields:
+    profile: /External Connections/Auth Profiles/OAuth2/API Gateway/Sample Client Authzcode App
+    tokenKey: ""
+    name: Exchange Authorization Code for Token and ID Token
+  routing:
+    success: ../Verify ID Token
+  children:
+  - type: ConnectionFilter
+    fields:
+      caCerts: []
+      ciphers: DEFAULT
+      ssloptions:
+      - nosslv2
+      - nosslv3
+      - notlsv1
+      - notlsv1_1
+      name: Connection Details
+    children:
+    - type: SaveToFileFilter
+      fields:
+        name: Persistence Details
+- type: VerifyIDTokenFilter
+  fields:
+    verifyWith: CERT
+    jwtVerifier: /Environment Configuration/Certificate Store/CN=Change this for production
+    clockSkew: 120
+    name: Verify ID Token
+  routing:
+    success: ../Set authenticated subject id
+    failure: ../Delete an OAuth Client Access Token
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: authentication.subject.id
+    attributeValue: ${openid.idtoken.sub}
+    name: Set authenticated subject id
+  routing:
+    success: ../Save the OAuth Token
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SaveOAuthTokenFilter
+  fields:
+    name: Save the OAuth Token
+  routing:
+    success: ../Get User Info from local User store
+- type: IsCachedAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/HTTP Sessions
+    keyAttributeName: authentication.subject.id
+    name: Get User Info from local User store
+  routing:
+    success: ../End Anonymous Session
+    failure: ../Get info from APIGateways UserInfo Service
+  logging:
+    fatal: 'Error while looking for key in the  message attribiute cache. Error: ${circuit.exception}'
+    failure: Failure while looking for key in the message attribute cache.
+    success: Found the key in the message attribute cache.
+- type: EndSessionFilter
+  fields:
+    removeCookie: true
+    uriprefix: /client
+    domain: ""
+    cookie: CLIENTCOOKIE
+    name: End Anonymous Session
+  routing:
+    success: ../Create new authenticated session
+- type: CreateSessionFilter
+  fields:
+    onlySendOverSSL: true
+    httpOnly: true
+    uriprefix: /client
+    domain: ""
+    cookie: CLIENTCOOKIE
+    name: Create new authenticated session
+  routing:
+    success: ../Redirect to Client app home page
+- type: ConnectToURLFilter
+  fields:
+    url: https://${env.OAUTH.SERVER}:${env.PORT.OAUTH2.SERVICES}/api/openid/user_info
+    profile: /External Connections/Auth Profiles/OAuth2/API Gateway/Sample Client Authzcode App
+    caCerts: []
+    ciphers: DEFAULT
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Get info from APIGateways UserInfo Service
+  routing:
+    success: ../Update local User store
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: CacheAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/HTTP Sessions
+    keyAttributeName: authentication.subject.id
+    name: Update local User store
+  routing:
+    success: ../End Anonymous Session
+  logging:
+    fatal: 'Error while caching the message attribute. Error: ${circuit.exception}'
+    failure: Failed to cache the message attribute.
+    success: Cached the message attribute.
+- type: DeleteOAuthTokenFilter
+  fields:
+    name: Delete an OAuth Client Access Token
+  routing:
+    success: ../Remove HTTP Header
+    failure: ../Remove HTTP Header
+- type: RemoveHTTPHeaderFilter
+  fields:
+    headerName: Location
+    name: Remove HTTP Header
+  routing:
+    success: ../Redirect to Logout Page
+  logging:
+    fatal: 'Error in removing the HTTP header from the message. Error: ${circuit.exception}'
+    failure: Failed in removing the HTTP header from the message
+    success: Success in removing the HTTP header from the message
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: https://${env.OAUTH.CLIENT}:${env.PORT.OAUTH2.CLIENT}/client/logout
+    outputContentType: text/html
+    content: verification of the id token failed
+    name: Redirect to Logout Page

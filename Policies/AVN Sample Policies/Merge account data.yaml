@@ -1,0 +1,92 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract REST Request Attributes
+  name: Merge account data
+  description: ""
+children:
+- type: ExtractRESTAttributesFilter
+  fields:
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Set Attribute Filter
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: cust_id
+    attributeValue: ${http.raw.querystring}
+    name: Set Attribute Filter
+  routing:
+    success: ../Connect to get loans
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: ConnectToURLFilter
+  fields:
+    url: http://demo.dxchange.cloud:9080/avn_loans_only?${cust_id}
+    caCerts: []
+    ssloptions:
+    - nosslv3
+    - notlsv1
+    - noSslRenegotiation
+    - notlsv1_1
+    name: Connect to get loans
+  routing:
+    success: ../Set loans
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: loans
+    attributeValue: ${content.body}
+    name: Set loans
+  routing:
+    success: ../Connect to get accounts
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: ConnectToURLFilter
+  fields:
+    url: http://demo.dxchange.cloud:9080/avn_accounts_only?${cust_id}
+    caCerts: []
+    ssloptions:
+    - nosslv3
+    - notlsv1
+    - noSslRenegotiation
+    - notlsv1_1
+    name: Connect to get accounts
+  routing:
+    success: ../JSON Add Node
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: JSONAddNodeFilter
+  fields:
+    expression: $
+    insertLocationType: 1
+    objectFieldName: obligations
+    name: JSON Add Node
+    content: '{{file "Merge account data-Files/JSON Add Node.json"}}'
+  routing:
+    success: ../Trace Filter
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceBody: true
+    name: Trace Filter
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties

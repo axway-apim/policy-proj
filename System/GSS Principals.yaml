@@ -1,0 +1,9 @@
+---
+type: GSSPrincipals
+fields:
+  name: GSS Principals
+children:
+- type: GSSPrincipal
+  fields:
+    name: HTTP/host Service Principal
+    principalName: HTTP/${http.destination.host}

@@ -1,0 +1,55 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Refresh Access token
+  name: Refresh
+  description: ""
+children:
+- type: RefreshingAccessTokenFilter
+  fields:
+    locationOfClientDetails: QueryString
+    tokenStore: /Libraries/OAuth2 Stores/Access Token Stores/OAuth Access Token Store
+    metricsMask: 1
+    name: Refresh Access token
+  routing:
+    success: ../Trace Filter
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceBody: true
+    name: Trace Filter
+  routing:
+    success: ../Is Response Status 200 ?
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: CompareAttributeFilter
+  fields:
+    name: Is Response Status 200 ?
+  routing:
+    success: ../Call 'Create JWT'
+    failure: ../Set Error Message
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.response.status}
+      matchType: IS
+      expression: 200
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Axway JWT Access Token Policies/OAuth 2.0/JWT Policies/Create JWT
+    name: Call 'Create JWT'
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: ChangeMessageFilter
+  fields:
+    body: ${content.body}
+    outputContentType: application/json
+    name: Set Error Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message

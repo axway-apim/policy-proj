@@ -1,0 +1,44 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Response message
+  name: Redact Account
+  description: ""
+children:
+- type: ChangeMessageFilter
+  fields:
+    body: ${content.body}
+    outputContentType: application/json
+    name: Response message
+  routing:
+    success: ../JSON Add Node
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: JSONAddNodeFilter
+  fields:
+    expression: $.accounts
+    objectFieldName: ""
+    name: JSON Add Node
+    content: '{{file "Redact Account-Files/JSON Add Node.json"}}'
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: account_response
+    attributeValue: ${content.body}
+    name: Set Attribute Filter
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    name: Trace Filter
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: JSONPathFilter
+  fields:
+    name: JSON Path

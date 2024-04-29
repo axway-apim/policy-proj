@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Certinomis - Root CA, OU=0002 433998903, O=Certinomis, C=FR
+  content: '{{file "CN=Certinomis - Root CA, OU=0002 4339989-106843966-cert.pem"}}'

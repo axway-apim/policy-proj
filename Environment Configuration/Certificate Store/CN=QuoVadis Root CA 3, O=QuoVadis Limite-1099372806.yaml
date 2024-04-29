@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=QuoVadis Root CA 3, O=QuoVadis Limited, C=BM
+  content: '{{file "CN=QuoVadis Root CA 3, O=QuoVadis Limite-1099372806-cert.pem"}}'

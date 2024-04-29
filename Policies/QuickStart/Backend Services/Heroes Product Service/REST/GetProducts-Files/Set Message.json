@@ -1,0 +1,14 @@
+{
+  "products" : {
+    "product" : [ {
+      "@id" : "cape",
+      "@name" : "Impenetrable Cape"
+    }, {
+      "@id" : "belt",
+      "@name" : "Utility Belt"
+    }, {
+      "@id" : "magnet",
+      "@name" : "Magnet"
+    } ]
+  }
+}

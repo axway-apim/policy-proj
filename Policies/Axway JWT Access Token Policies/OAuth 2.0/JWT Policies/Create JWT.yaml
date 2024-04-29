@@ -1,0 +1,106 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract OAuth Access Token Values
+  name: Create JWT
+  description: ""
+children:
+- type: JSONPathFilter
+  fields:
+    name: Extract OAuth Access Token Values
+  routing:
+    success: ../Call 'Prepare Partner Data'
+  children:
+  - type: JSONPath
+    fields:
+      attributeName: var.axway.jwt.claims.refresh_token
+      expression: $.refresh_token
+      unmarshalType: java.lang.String
+  - type: JSONPath
+    fields:
+      attributeName: var.axway.jwt.claims.access_token
+      expression: $.access_token
+      unmarshalType: java.lang.String
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Axway JWT Access Token Policies/OAuth 2.0/JWT Policies/Prepare Partner Data
+    name: Call 'Prepare Partner Data'
+  routing:
+    success: ../Store Original Access Token to String
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: store.content.body
+    attributeValue: ${content.body}
+    name: Store Original Access Token to String
+  routing:
+    success: ../Set JWT Claims
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: var.axway.jwt.claims
+    attributeValue: "{\r\n\t\"iss\" : \"APIGW 7.5.3 Server\",\r\n  \t\"access_token\": \"${var.axway.jwt.claims.access_token}\",\r\n\t\"refresh_token\": \"${var.axway.jwt.claims.refresh_token}\",\r\n  \t\"sub\": \"1234567890\",\r\n  \t\"name\": \"User Name\",\r\n  \t\"admin\": true,\r\n  \t\"exp\" : \"1546276746000\"\r\n\t${axway.partner.info.fragment}\t\r\n}\r\n\r\n\r\n\r\n\r\n"
+    name: Set JWT Claims
+  routing:
+    success: ../JWT Sign
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: JWTSignFilter
+  fields:
+    privateKeyAlias: /Environment Configuration/Certificate Store/Samples Test Certificate
+    signAlgorithm: RS512
+    privateGenerateKid: false
+    sharedKey: ""
+    protectAlgorithm: ""
+    jwsMsgAttribute: ${var.axway.jwt.claims}
+    name: JWT Sign
+  routing:
+    success: ../Replace Original Access Token by JWT Access Token
+- type: StringReplaceFilter
+  fields:
+    sourceAttribute: store.content.body
+    replacementString: ${jwt.body}
+    straightMatchString: ${var.axway.jwt.claims.access_token}
+    name: Replace Original Access Token by JWT Access Token
+  routing:
+    success: ../JWT Verify
+- type: JWTVerifyFilter
+  fields:
+    jwsToken: ${jwt.body}
+    keyDiscoverySelection: 1
+    publicKeyAlias: /Environment Configuration/Certificate Store/Samples Test Certificate
+    useSharedKey: false
+    sharedKeySelection: 0
+    sharedKey: ""
+    setPayloadAsContentBody: false
+    useCtyHeaderContentType: false
+    setPayloadMsgAttribute: true
+    name: JWT Verify
+  routing:
+    success: ../Set JWT Access Token Message
+- type: ChangeMessageFilter
+  fields:
+    body: ${store.content.body}
+    outputContentType: application/json
+    name: Set JWT Access Token Message
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

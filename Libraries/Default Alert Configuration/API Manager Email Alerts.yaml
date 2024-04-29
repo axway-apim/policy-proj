@@ -1,0 +1,10 @@
+---
+type: EmailAlertSystem
+fields:
+  to: ${alert.recipient.emails}
+  from: no-reply@axway.com
+  subject: API Manager Alert
+  smtp: localhost
+  username: ""
+  password: ""
+  name: API Manager Email Alerts

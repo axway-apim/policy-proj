@@ -1,0 +1,69 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract OAuth Client Id from Access Token
+  name: Check API x Application Access
+  description: ""
+children:
+- type: JSONPathFilter
+  fields:
+    name: Extract OAuth Client Id from Access Token
+  routing:
+    success: ../Get Application ID from KPS
+    failure: ../False Filter
+  children:
+  - type: JSONPath
+    fields:
+      attributeName: axway.client.id
+      expression: $.audience
+      unmarshalType: java.lang.String
+      failOnError: true
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: axway.application.id
+    attributeValue: ${kps.ClientApplicationRegistry[axway.client.id].applicationId}
+    name: Get Application ID from KPS
+  routing:
+    success: ../Read API Access
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: PortalApiaccessReadFilter
+  fields:
+    apiIdSelector: ${api.id}
+    entityIdSelector: ${axway.application.id}
+    name: Read API Access
+  routing:
+    success: ../Is there the API Access?
+    failure: ../False Filter
+- type: CompareAttributeFilter
+  fields:
+    name: Is there the API Access?
+  routing:
+    success: ../True Filter
+    failure: ../False Filter
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${apimgmt.apiaccess}
+      matchType: IS_NOT
+      expression: '{}'
+  - type: AttributeCompare
+    fields:
+      attrName: ${apimgmt.apiaccess}
+      matchType: IS_NOT
+      expression: "null"
+- type: TrueFilter
+  fields:
+    name: True Filter
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: FalseFilter
+  fields:
+    name: False Filter
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""

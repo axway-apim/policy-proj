@@ -1,0 +1,121 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call Auth0 Token Verification
+  fault: ./API Manager Handler
+  name: Auth0 as IDP
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Auth0/Auth0 Token Verification
+    name: Call Auth0 Token Verification
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: JSONPathFilter
+  fields:
+    name: Extract token information
+  routing:
+    success: ../Set oauth.token.valid
+  children:
+  - type: JSONPath
+    fields:
+      attributeName: adfs.oauth.token.scope
+      expression: $.scp
+      unmarshalType: java.lang.String
+  - type: JSONPath
+    fields:
+      attributeName: adfs.oauth.token.expires_in
+      expression: $.exp
+      unmarshalType: java.lang.String
+  - type: JSONPath
+    fields:
+      attributeName: adfs.oauth.token.appid
+      expression: $.appid
+      unmarshalType: java.lang.String
+      failOnError: true
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: oauth.token.valid
+    attributeValue: ${message.reception_time < (adfs.oauth.token.expires_in *1000) }
+    name: Set oauth.token.valid
+  routing:
+    success: ../Set oauth.token.client_id
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: oauth.token.client_id
+    attributeValue: ${adfs.oauth.token.appid}
+    name: Set oauth.token.client_id
+  routing:
+    success: ../Set oauth.token.scopes
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: StringReplaceFilter
+  fields:
+    sourceAttribute: adfs.oauth.token.scope
+    destAttribute: oauth.token.scopes
+    destAttributeOverride: true
+    replacementString: ','
+    matchMode: REGEX_REPLACE
+    regexMatchString: \s+
+    matchBehaviour: MATCH_ALL
+    name: Set oauth.token.scopes
+  routing:
+    success: ../Successfully retrieved token information
+- type: TrueFilter
+  fields:
+    name: Successfully retrieved token information
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: ChangeMessageFilter
+  fields:
+    body: ' ${jwt.body}'
+    outputContentType: application/json
+    name: Set Message
+  routing:
+    success: ../Extract token information
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: JSONPathFilter
+  fields:
+    name: Extract error information
+  routing:
+    success: ../Cannot retrieve token information
+  children:
+  - type: JSONPath
+    fields:
+      attributeName: adfs.oauth.error
+      expression: $.error
+      unmarshalType: java.lang.String
+      failOnError: true
+  - type: JSONPath
+    fields:
+      attributeName: adfs.oauth.error_description
+      expression: $.error_description
+      unmarshalType: java.lang.String
+- type: FalseFilter
+  fields:
+    name: Cannot retrieve token information
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""
+- type: GenericFaultFilter
+  fields:
+    showStack: true
+    showPath: true
+    showAttributes: true
+    faultString: Security failure
+    responseHandling: Policy
+    name: API Manager Handler

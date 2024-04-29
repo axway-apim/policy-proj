@@ -1,0 +1,9 @@
+---
+type: ResourceTag
+fields:
+  ID: 4MUKNZZBJJ4DYEGWLCW7TYFSRV6KALY2
+  resourceID: 7IHPOL6MTHDFMTUWFAFOUNME3EYX7IV3
+  comment: Registering EC2 Web Service
+  creator: dmckenna
+  timestamp: 1588470243056
+  version: 1

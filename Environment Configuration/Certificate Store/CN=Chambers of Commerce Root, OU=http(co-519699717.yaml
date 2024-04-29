@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Chambers of Commerce Root, OU=http://www.chambersign.org, O=AC Camerfirma SA CIF A82743287, C=EU
+  content: '{{file "CN=Chambers of Commerce Root, OU=http(co-519699717-cert.pem"}}'

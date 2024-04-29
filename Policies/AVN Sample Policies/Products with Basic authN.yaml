@@ -1,0 +1,80 @@
+---
+type: FilterCircuit
+fields:
+  start: ./HTTP Basic authentication
+  name: Products with Basic authN
+  description: ""
+children:
+- type: HttpBasicFilter
+  fields:
+    credentialFormat: Username
+    removeAuthNHeader: false
+    repository: /External Connections/Authentication Repositories/LDAP Repositories/api-env OpenLDAP
+    name: HTTP Basic authentication
+  routing:
+    success: ../Get products
+    failure: ../Set 401 body
+  logging:
+    fatal: 'Error occurred while authenticating via HTTP Basic. Error: ${circuit.exception}'
+    failure: HTTP basic authentication failed
+    success: HTTP basic authentication success for ${authentication.subject.id}
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: '/Policies/AVN Sample Policies/Get products from DB '
+    name: Get products
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.body
+    attributeValue: '{"Error": "Enter valid user ID and password"}'
+    name: Set 401 body
+  routing:
+    success: ../Set 401 code
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.http.code
+    attributeValue: 401
+    name: Set 401 code
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: FalseFilter
+  fields:
+    name: False Filter 401
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""
+- type: ExceptionFilter
+  fields:
+    name: Abort
+  logging:
+    fatal: 'Error in calling exception filter. Error: ${circuit.exception}'
+    failure: Failure in exception filter
+    success: Success in exception filter
+- type: Reflector
+  fields:
+    httpResponseStatus: 401
+    name: Reflect Error
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: ChangeMessageFilter
+  fields:
+    body: '{"Error": "Enter valid user ID and password"}'
+    outputContentType: application/json
+    name: Set Error
+  routing:
+    success: ../Reflect Error
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message

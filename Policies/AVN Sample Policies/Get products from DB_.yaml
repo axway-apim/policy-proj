@@ -1,0 +1,81 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract REST Request Attributes
+  name: 'Get products from DB '
+  description: ""
+children:
+- type: ExtractRESTAttributesFilter
+  fields:
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Retrieve parts from fastcars DB
+- type: AttributeExtractDbFilter
+  fields:
+    dbConn: /External Connections/Database Connections/mysql
+    userIdentityAttribName: ""
+    placeDbResultsIntoUserAttributeList: false
+    name: Retrieve parts from fastcars DB
+  routing:
+    success: ../Convert to JSON
+  logging:
+    fatal: 'Error occurred while extracting attributes from database/entity store. Error: ${circuit.exception}'
+    failure: Failed to extract attributes from database/entity store
+    success: Extracted attributes from database/entity store for ${attribute.subject.id}
+  children:
+  - type: Query
+    fields:
+      name: Gets parts from parts_inventory
+      sqlStatement: '{{file "Get products from DB_-Files/Retrieve parts from fastcars DB - Gets parts from parts_inventory.sql"}}'
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Convert to JSON
+    script: '{{file "Get products from DB_-Files/Convert to JSON.groovy"}}'
+  routing:
+    success: ../Create response
+    failure: ../Set Error Message
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: ChangeMessageFilter
+  fields:
+    body: ${json_result}
+    outputContentType: application/json
+    name: Create response
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: ChangeMessageFilter
+  fields:
+    body: ${json_convert_error}
+    outputContentType: application/text
+    name: Set Error Message
+  routing:
+    success: ../Reflect Message{1}
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 500
+    name: Reflect Message{1}
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

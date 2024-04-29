@@ -1,0 +1,47 @@
+---
+type: FilterCircuit
+fields:
+  start: ./1.Decrypt Request
+  name: Main
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Sample Policies/Security/Decrypt-Encrypt/Decrypt
+    name: 1.Decrypt Request
+  routing:
+    success: ../2.Route to StockQuote Web Service
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: ConnectToURLFilter
+  fields:
+    url: http://stockquote.com/stockquote/instance1
+    caCerts: []
+    useRootCerts: false
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: 2.Route to StockQuote Web Service
+  routing:
+    success: ../3.Encrypt Response
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Sample Policies/Security/Decrypt-Encrypt/Encrypt
+    name: 3.Encrypt Response
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut

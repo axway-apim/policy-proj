@@ -1,0 +1,61 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract Access Token from Message
+  fault: ./Return a False Filter on Exception
+  name: Verify and Extract JWT
+  description: ""
+children:
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: var.axway.jwt.accesstoken
+    attributeValue: ${content.body.getParameters().get("access_token")}
+    name: Extract Access Token from Message
+  routing:
+    success: ../JWT Verify
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: JWTVerifyFilter
+  fields:
+    jwsToken: ${var.axway.jwt.accesstoken}
+    keyDiscoverySelection: 1
+    publicKeyAlias: /Environment Configuration/Certificate Store/Samples Test Certificate
+    useSharedKey: false
+    sharedKeySelection: 0
+    sharedKey: ""
+    setPayloadAsContentBody: false
+    useCtyHeaderContentType: false
+    setPayloadMsgAttribute: true
+    name: JWT Verify
+  routing:
+    success: ../Trace Filter
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceBody: true
+    name: Trace Filter
+  routing:
+    success: ../Decode JWT and Extract OAuth Access Token
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: JavaScriptFilter
+  fields:
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Decode JWT and Extract OAuth Access Token
+    script: '{{file "Verify and Extract JWT-Files/Decode JWT and Extract OAuth Access Token.nashorn.js"}}'
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: FalseFilter
+  fields:
+    name: Return a False Filter on Exception
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""

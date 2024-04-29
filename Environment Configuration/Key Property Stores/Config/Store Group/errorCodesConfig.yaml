@@ -1,0 +1,10 @@
+---
+type: KPSReadWriteStore
+fields:
+  key: errorCode
+  readKey: ""
+  name: errorCodesConfig
+  description: Error code configuration
+  type: /Environment Configuration/Key Property Stores/Config/Type Group/errorCodesConfig
+  dataSource: /null
+  aliases: error

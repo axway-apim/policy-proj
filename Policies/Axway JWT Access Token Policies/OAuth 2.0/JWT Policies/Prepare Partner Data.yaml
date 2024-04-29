@@ -1,0 +1,50 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract Partner Info From Header
+  name: Prepare Partner Data
+  description: ""
+children:
+- type: CopyAttributeFilter
+  fields:
+    name: Extract Partner Info From Header
+  routing:
+    success: ../Set Partner Attributes Fragment
+  logging:
+    fatal: 'Error occurred while copying attributes. Error: ${circuit.exception}'
+    failure: Failed to copy attributes
+    success: Copied attributes successfully
+  children:
+  - type: CopyAttribute
+    fields:
+      fromAttributeName: ""
+      toAttributeName: axway.partner.id.admin
+      attributeValue: ${http.headers["partner_id_admin"]}
+      fromAttributeLocation: 3
+  - type: CopyAttribute
+    fields:
+      fromAttributeName: ""
+      toAttributeName: axway.partner.id
+      attributeValue: ${http.headers["partner_id"]}
+      fromAttributeLocation: 3
+  - type: CopyAttribute
+    fields:
+      fromAttributeName: ""
+      toAttributeName: axway.partner.name
+      attributeValue: ${http.headers["partner_name"]}
+      fromAttributeLocation: 3
+  - type: CopyAttribute
+    fields:
+      fromAttributeName: ""
+      toAttributeName: axway.partner.allowed.apis
+      attributeValue: ${http.headers["partner_allowed_apis"]}
+      fromAttributeLocation: 3
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: axway.partner.info.fragment
+    attributeValue: ",\r\n\"partner_id\": \"${axway.partner.id}\",\t\r\n\"partner_name\": \"${axway.partner.name}\",\t\r\n\"partner_admin_id\": \"${axway.partner.id.admin}\",\t\r\n\"partner_allowed_apis\" : ${axway.partner.allowed.apis}"
+    name: Set Partner Attributes Fragment
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value

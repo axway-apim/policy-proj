@@ -1,0 +1,156 @@
+---
+type: FilterCircuit
+fields:
+  start: ./2. SAML Authentication
+  name: OrderProduct
+  description: ""
+children:
+- type: SamlAuthNExtractFilter
+  fields:
+    actor: '##current##'
+    trustedIssuers: Samples Test CA
+    majorVersion: []
+    minorVersion: []
+    name: 2. SAML Authentication
+  routing:
+    success: ../3. Retrieve from SAML Attribute Assertion
+  logging:
+    fatal: 'Error during locating SAML authentication assertion. Error: ${circuit.exception}'
+    failure: Failed to location a SAML authentication assertion
+    success: Located SAML authentication assertion for ${attribute.subject.id}
+- type: SamlAttribExtractFilter
+  fields:
+    subjectMatchType: 1
+    subjectMatch: ""
+    actor: '##current##'
+    trustedIssuers: Samples Test CA
+    majorVersion: []
+    minorVersion: []
+    name: 3. Retrieve from SAML Attribute Assertion
+  routing:
+    success: ../4. Retrieve Product from message
+  logging:
+    fatal: 'Error occurred while extracting attributes from SAML attribute assertion. Error: ${circuit.exception}'
+    failure: Failed to extract attributes from SAML attribute assertion
+    success: Extracted attributes from SAML attribute assertion for ${attribute.subject.id}
+- type: AttributeExtractXPathFilter
+  fields:
+    attributeLocation: /Resources/XPath Definitions/Attribute Locations/OrderProduct
+    attributeName: order.product
+    name: 4. Retrieve Product from message
+  routing:
+    success: ../5. Check 'Bad Guys'
+  logging:
+    fatal: 'Error occurred while extracting attributes via XPath. Error: ${circuit.exception}'
+    failure: Failed to extract attributes via XPath
+    success: Extracted attribute from message via XPath
+- type: CompareAttributeFilter
+  fields:
+    name: 5. Check 'Bad Guys'
+  routing:
+    success: ../Check 'Shop Online'
+    failure: '../Set Failure: Invalid faction'
+  logging:
+    maskType: FILTER
+    mask: 0
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${kps.heroes[authentication.subject.id].faction}
+      matchType: IS
+      expression: Bad Guys
+- type: CompareAttributeFilter
+  fields:
+    name: Check 'Shop Online'
+  routing:
+    success: ../Connect to Villains' SOAP Service
+    failure: '../Set Failure: Not Permitted'
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${kps.heroes[authentication.subject.id].shoponline}
+      matchType: IS
+      expression: "true"
+- type: ConnectToURLFilter
+  fields:
+    url: http://villains.org/productService/SOAP
+    method: POST
+    caCerts: []
+    useRootCerts: false
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Connect to Villains' SOAP Service
+  routing:
+    success: ../10. Reflect Message
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: Reflector
+  fields:
+    name: 10. Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: circuit.failure.reason
+    attributeValue: Not permitted to use this service
+    name: 'Set Failure: Not Permitted'
+  routing:
+    success: ../SOAP Fault
+  logging:
+    maskType: FILTER
+    mask: 0
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SOAPFaultFilter
+  fields:
+    showDetailedReason: true
+    soapVersion: FROM_MESSAGE
+    name: SOAP Fault
+  routing:
+    success: ../Reflect Fault
+  logging:
+    fatal: 'Error while generating SOAP Fault. Error: ${circuit.exception}'
+    failure: Failed to create a SOAP Fault
+    success: Created a SOAP Fault
+- type: Reflector
+  fields:
+    httpResponseStatus: 500
+    name: Reflect Fault
+  routing:
+    success: ../False Filter
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: FalseFilter
+  fields:
+    name: False Filter
+  logging:
+    maskType: FILTER
+    mask: 0
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: circuit.failure.reason
+    attributeValue: Invalid faction
+    name: 'Set Failure: Invalid faction'
+  routing:
+    success: ../SOAP Fault
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value

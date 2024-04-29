@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Business Hours Access Only Allowed
+  description: Passes if the current time is between 9am and 5pm and the day is a weekday (Mon-Fri)
+  engineName: groovy
+  script: '{{file "Business Hours Access Only Allowed.groovy"}}'

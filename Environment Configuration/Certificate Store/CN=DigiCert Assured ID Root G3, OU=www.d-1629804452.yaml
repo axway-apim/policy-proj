@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=DigiCert Assured ID Root G3, OU=www.digicert.com, O=DigiCert Inc, C=US
+  content: '{{file "CN=DigiCert Assured ID Root G3, OU=www.d-1629804452-cert.pem"}}'

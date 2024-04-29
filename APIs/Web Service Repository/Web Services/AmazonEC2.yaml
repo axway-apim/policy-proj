@@ -1,0 +1,946 @@
+---
+type: WebService
+fields:
+  name: AmazonEC2
+  resourceSetID: JVBRZ5YCXKBEJTIUTZ7TY6C4H77XY3BX
+children:
+- type: OperationList
+  fields:
+    name: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2'
+  children:
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ReportInstanceStatus
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteNetworkAclEntry
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeImages
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CancelConversionTask
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateInstanceExportTask
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ReplaceRouteTableAssociation
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeRouteTables
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateImage
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateVpnConnection
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeSpotInstanceRequests
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteTags
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CancelReservedInstancesListing
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeSubnets
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AssociateDhcpOptions
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateInternetGateway
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ModifyVpcAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreatePlacementGroup
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteKeyPair
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ResetSnapshotAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DisableVgwRoutePropagation
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeactivateLicense
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteVpnConnectionRoute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateVolume
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CopyImage
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AcceptVpcPeeringConnection
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ConfirmProductInstance
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DisassociateAddress
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeReservedInstancesOfferings
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeConversionTasks
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ModifyReservedInstances
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateNetworkInterface
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ReplaceRoute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeSecurityGroups
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: RebootInstances
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateNetworkAcl
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AttachVolume
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteCustomerGateway
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeSpotDatafeedSubscription
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateCustomerGateway
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DetachVolume
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: RegisterImage
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateSpotDatafeedSubscription
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateSubnet
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteInternetGateway
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ModifyImageAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteNetworkAcl
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribePlacementGroups
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateDhcpOptions
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeVpcAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteNetworkInterface
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AttachNetworkInterface
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateKeyPair
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: UnassignPrivateIpAddresses
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CancelSpotInstanceRequests
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ModifyVolumeAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AuthorizeSecurityGroupIngress
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ImportKeyPair
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeVolumeStatus
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeImageAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: RevokeSecurityGroupIngress
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeInstanceStatus
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: BundleInstance
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeDhcpOptions
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteVpnGateway
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: TerminateInstances
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeReservedInstances
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ReplaceNetworkAclAssociation
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: RevokeSecurityGroupEgress
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeregisterImage
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AttachInternetGateway
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DisassociateRouteTable
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteDhcpOptions
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateTags
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeReservedInstancesModifications
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeNetworkInterfaces
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AttachVpnGateway
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeNetworkAcls
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeExportTasks
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CancelExportTask
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DetachVpnGateway
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteVpcPeeringConnection
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateSnapshot
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeVpcPeeringConnections
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeSnapshots
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeVpnConnections
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateVpcPeeringConnection
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeKeyPairs
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeLicenses
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateVpc
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: GetPasswordData
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeNetworkInterfaceAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DetachNetworkInterface
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateVpnGateway
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeRegions
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteSpotDatafeedSubscription
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeBundleTasks
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ModifyNetworkInterfaceAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateRoute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: EnableVgwRoutePropagation
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateRouteTable
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ReleaseAddress
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeAvailabilityZones
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteVolume
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ModifySnapshotAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeTags
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeVpnGateways
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteVpnConnection
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeVpcs
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: StopInstances
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteVpc
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeVolumes
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AssociateAddress
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteRouteTable
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeSpotPriceHistory
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ReplaceNetworkAclEntry
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AssignPrivateIpAddresses
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CopySnapshot
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeVolumeAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeReservedInstancesListings
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateReservedInstancesListing
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteSubnet
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteSecurityGroup
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CancelBundleTask
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ImportVolume
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: StartInstances
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeInstanceAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateNetworkAclEntry
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: RequestSpotInstances
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeAccountAttributes
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: RunInstances
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeAddresses
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ImportInstance
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeletePlacementGroup
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ResetNetworkInterfaceAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateSecurityGroup
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ResetInstanceAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeCustomerGateways
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteRoute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeSnapshotAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: PurchaseReservedInstancesOffering
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: CreateVpnConnectionRoute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: GetConsoleOutput
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeInternetGateways
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AssociateRouteTable
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: UnmonitorInstances
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DetachInternetGateway
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: MonitorInstances
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ModifyInstanceAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AllocateAddress
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: RejectVpcPeeringConnection
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: EnableVolumeIO
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DescribeInstances
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: DeleteSnapshot
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ResetImageAttribute
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: ActivateLicense
+      bindingInput: null
+      bindingOutput: null
+  - type: Operation
+    fields:
+      bindingName: '{http://ec2.amazonaws.com/doc/2014-02-01/}AmazonEC2Binding'
+      bindingOperation: AuthorizeSecurityGroupEgress
+      bindingInput: null
+      bindingOutput: null

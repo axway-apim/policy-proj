@@ -1,0 +1,25 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Set Message
+  name: Java Exception
+  description: ""
+children:
+- type: ChangeMessageFilter
+  fields:
+    outputContentType: text/plain
+    name: Set Message
+    body: '{{file "Java Exception-Files/Set Message.txt"}}'
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

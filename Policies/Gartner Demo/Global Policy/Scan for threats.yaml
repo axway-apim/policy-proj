@@ -1,0 +1,37 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Compare Attribute
+  name: Scan for threats
+  description: ""
+children:
+- type: CompareAttributeFilter
+  fields:
+    matchingRule: MATCH_ONE
+    name: Compare Attribute
+  routing:
+    success: ../True Filter
+    failure: ../True Filter
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.request.method}
+      matchType: IS
+      expression: PATCH
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.request.method}
+      matchType: IS
+      expression: POST
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.request.method}
+      matchType: IS
+      expression: PUT
+- type: TrueFilter
+  fields:
+    name: True Filter
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed

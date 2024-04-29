@@ -1,0 +1,11 @@
+---
+type: SSLInterface
+fields:
+  serverCert: /Environment Configuration/Certificate Store/newdemocert
+  caCert: []
+  ciphers: FIPS:!SSLv3:!aNULL
+  ssloptions: nosslv3
+  resolveSubjectCNtoNetAddr: false
+  name: Portal Traffic HTTPS Interface
+  port: ${env.PORT.PORTAL.TRAFFIC}
+  wafProfile: /Libraries/Threat Protection Profiles/WAF

@@ -1,0 +1,8 @@
+---
+type: DbConnection
+fields:
+  name: mysql
+  username: root
+  password: YXh3YXk=
+  wildcardPassword: ""
+  url: jdbc:mysql://127.0.0.1:3306/fastcars

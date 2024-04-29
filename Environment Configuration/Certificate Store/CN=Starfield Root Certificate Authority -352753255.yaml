@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Starfield Root Certificate Authority - G2, O="Starfield Technologies, Inc.", L=Scottsdale, ST=Arizona, C=US
+  content: '{{file "CN=Starfield Root Certificate Authority -352753255-cert.pem"}}'

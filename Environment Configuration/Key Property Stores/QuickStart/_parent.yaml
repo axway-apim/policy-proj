@@ -1,0 +1,7 @@
+---
+type: KPSPackage
+fields:
+  name: QuickStart
+  description: Quick start tutorial
+  alias: ""
+  dataSource: /null

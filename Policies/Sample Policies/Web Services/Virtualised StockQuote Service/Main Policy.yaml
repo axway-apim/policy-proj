@@ -1,0 +1,54 @@
+---
+type: FilterCircuit
+fields:
+  start: ./1. Initialize Global Message Attributes
+  fault: ./Call 'Global Exception Handler'
+  name: Main Policy
+  description: Top policy to invoke the service
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Sample Policies/Web Services/Virtualised StockQuote Service/Fault Handlers/Set Global Data
+    name: 1. Initialize Global Message Attributes
+  routing:
+    success: ../2. Apply Threat Detection
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Sample Policies/Web Services/Virtualised StockQuote Service/Threat Protection
+    name: 2. Apply Threat Detection
+  routing:
+    success: ../3. Route based on Symbol Value
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Sample Policies/Web Services/Virtualised StockQuote Service/Route based on Symbol Value
+    name: 3. Route based on Symbol Value
+  routing:
+    success: ../4. Add Instance Name to Response
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Sample Policies/Web Services/Virtualised StockQuote Service/Add Instance Name to Response
+    name: 4. Add Instance Name to Response
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Sample Policies/Web Services/Virtualised StockQuote Service/Fault Handlers/Global Exception Handler
+    name: Call 'Global Exception Handler'
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut

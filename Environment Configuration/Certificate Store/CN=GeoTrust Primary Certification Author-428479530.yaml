@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=GeoTrust Primary Certification Authority - G2, OU=(c) 2007 GeoTrust Inc. - For authorized use only, O=GeoTrust Inc., C=US
+  content: '{{file "CN=GeoTrust Primary Certification Author-428479530-cert.pem"}}'

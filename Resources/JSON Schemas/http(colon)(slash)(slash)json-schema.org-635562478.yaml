@@ -1,0 +1,5 @@
+---
+type: JSONSchema
+fields:
+  URL: http://json-schema.org/address
+  contents: '{{file "http(colon)(slash)(slash)json-schema.org-635562478.json"}}'

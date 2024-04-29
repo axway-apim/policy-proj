@@ -1,0 +1,10 @@
+---
+type: LdapDirectory
+fields:
+  name: Sample Active Directory Connection
+  url: ldap://ldaphost.sample.com:389
+  authType: SIMPLE
+  userName: cn=Administrator,cn=users,DC=sample,DC=com
+  password: Y2hhbmdlbWU=
+  authRealm: ""
+  sslEnabled: false

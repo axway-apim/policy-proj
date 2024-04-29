@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Actalis Authentication Root CA, O=Actalis S.p.A./03358520967, L=Milan, C=IT
+  content: '{{file "CN=Actalis Authentication Root CA, O=Act-1804762059-cert.pem"}}'

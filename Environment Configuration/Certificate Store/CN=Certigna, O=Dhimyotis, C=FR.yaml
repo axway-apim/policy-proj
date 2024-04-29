@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Certigna, O=Dhimyotis, C=FR
+  content: '{{file "CN=Certigna, O=Dhimyotis, C=FR-cert.pem"}}'

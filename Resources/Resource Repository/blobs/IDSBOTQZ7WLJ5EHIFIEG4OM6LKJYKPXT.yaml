@@ -1,0 +1,6 @@
+---
+type: ResourceBlob
+fields:
+  ID: IDSBOTQZ7WLJ5EHIFIEG4OM6LKJYKPXT
+  type: wsdl
+  content: '{{file "IDSBOTQZ7WLJ5EHIFIEG4OM6LKJYKPXT.wsdl" "binary"}}'

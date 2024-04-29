@@ -1,0 +1,6 @@
+---
+type: Cache
+fields:
+  name: Azure
+  eternal: true
+  timeToLiveSeconds: 600

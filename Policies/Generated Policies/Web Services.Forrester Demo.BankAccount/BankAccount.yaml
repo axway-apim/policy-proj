@@ -1,0 +1,81 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Service Handler for 'BankAccount'
+  name: BankAccount
+  category: /System/Policy Categories/generated
+children:
+- type: WSFilter
+  fields:
+    specifiedURL: http://api-env:5080/BankAccountService
+    routingCircuit: /null
+    validationCircuit: /null
+    webService: /APIs/Web Service Repository/Web Services/Forrester Demo/BankAccount
+    name: Service Handler for 'BankAccount'
+  children:
+  - type: OperationCircuitChain
+    fields:
+      beforeOperationHooks: /null
+      afterOperationHooks: /null
+      name: Request To Back End
+    children:
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://www.axway.com/bank
+        operationName: RetrieveAccountRequest
+        soapVersion: SOAP 1.2
+        name: '{http://www.axway.com/bank}RetrieveAccountRequest(SOAP 1.2)'
+        priority: 1
+  - type: OperationCircuitChain
+    fields:
+      beforeOperationHooks: /null
+      afterOperationHooks: /null
+      name: Request From Front End
+    children:
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://www.axway.com/bank
+        operationName: RetrieveAccountRequest
+        soapAction: ^http://www.axway.com/RetrieveAccount$
+        soapVersion: SOAP 1.2
+        name: '{http://www.axway.com/bank}RetrieveAccountRequest(SOAP 1.2)'
+        priority: 1
+  - type: OperationCircuitChain
+    fields:
+      beforeOperationHooks: /null
+      afterOperationHooks: /null
+      name: Response From Back End
+    children:
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://www.axway.com/bank
+        operationName: RetrieveAccountRequest
+        soapVersion: SOAP 1.2
+        name: '{http://www.axway.com/bank}RetrieveAccountRequest(SOAP 1.2)'
+        priority: 1
+  - type: ConnectionFilter
+    fields:
+      ciphers: FIPS:!SSLv3:!aNULL
+      ssloptions:
+      - nosslv2
+      - nosslv3
+      - notlsv1
+      - notlsv1_1
+      name: Connection Details
+    children:
+    - type: SaveToFileFilter
+      fields:
+        name: Persistence Details
+  - type: OperationCircuitChain
+    fields:
+      beforeOperationHooks: /null
+      afterOperationHooks: /null
+      name: Response To Front End
+    children:
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://www.axway.com/bank
+        operationName: RetrieveAccountRequest
+        soapVersion: SOAP 1.2
+        name: '{http://www.axway.com/bank}RetrieveAccountRequest(SOAP 1.2)'
+        priority: 1

@@ -1,0 +1,251 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract REST Request Attributes
+  fault: ./Fault Handler Restore Message
+  name: ASE Request Handler
+  description: ""
+children:
+- type: ExtractRESTAttributesFilter
+  fields:
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Store Headers
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Store Headers
+    script: '{{file "ASE Request Handler-Files/Store Headers.groovy"}}'
+  routing:
+    success: ../Set Source IP
+    failure: ../Set Source IP
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: sourceIP
+    attributeValue: ${http.request.clientaddr.getHostString()}
+    name: Set Source IP
+  routing:
+    success: ../Is HTTP method POST, PUT or PATCH?
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: CompareAttributeFilter
+  fields:
+    matchingRule: MATCH_ONE
+    name: Is HTTP method POST, PUT or PATCH?
+  routing:
+    success: ../Store Message
+    failure: ../Access Token Information
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.request.verb}
+      matchType: IS
+      expression: PUT
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.request.verb}
+      matchType: IS
+      expression: POST
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.request.verb}
+      matchType: IS
+      expression: PATCH
+- type: StoreContentBodyToAttributeFilter
+  fields:
+    name: Store Message
+  routing:
+    success: ../Get Content Type
+  logging:
+    fatal: 'Error in storing the message. Error: ${circuit.exception}'
+    failure: Failed to store the message in attribute
+    success: 'Success in storing the message to attribute '
+- type: AttributeExtractHTTPHeaderFilter
+  fields:
+    headerName: Content-Type
+    attributeName: content.type
+    name: Get Content Type
+  routing:
+    success: ../Get Content Length
+    failure: ../Get Content Length
+  logging:
+    fatal: 'Error occurred while extracting attributes from HTTP header. Error: ${circuit.exception}'
+    failure: Failed to extract attribute HTTP header
+    success: Extracted attribute from HTTP header
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Get Content Length
+    script: '{{file "ASE Request Handler-Files/Get Content Length.groovy"}}'
+  routing:
+    success: ../Get Connection
+    failure: ../Get Connection
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: AttributeExtractHTTPHeaderFilter
+  fields:
+    headerName: Connection
+    attributeName: http.connection
+    name: Get Connection
+  routing:
+    success: ../Get Transfer Encoding
+    failure: ../Get Transfer Encoding
+  logging:
+    fatal: 'Error occurred while extracting attributes from HTTP header. Error: ${circuit.exception}'
+    failure: Failed to extract attribute HTTP header
+    success: Extracted attribute from HTTP header
+- type: AttributeExtractHTTPHeaderFilter
+  fields:
+    headerName: Transfer-Encoding
+    attributeName: http.transferencoding
+    name: Get Transfer Encoding
+  routing:
+    success: ../Access Token Information
+    failure: ../Access Token Information
+  logging:
+    fatal: 'Error occurred while extracting attributes from HTTP header. Error: ${circuit.exception}'
+    failure: Failed to extract attribute HTTP header
+    success: Extracted attribute from HTTP header
+- type: AccessTokenInfoFilter
+  fields:
+    tokenStore: /Libraries/OAuth2 Stores/Access Token Stores/OAuth Access Token Store
+    metricsMask: 1
+    name: Access Token Information
+  routing:
+    success: ../Set POST request Body
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Set POST request Body
+    script: '{{file "ASE Request Handler-Files/Set POST request Body.groovy"}}'
+  routing:
+    success: ../Set ASE Request
+    failure: ../Set ASE Request
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: ChangeMessageFilter
+  fields:
+    body: ${ASEPostBody}
+    outputContentType: application/json
+    name: Set ASE Request
+  routing:
+    success: ../Invoke ASE_Request
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/ASESecurity/ASE_Request_Connecter
+    name: Invoke ASE_Request
+  routing:
+    success: ../Trace Filter
+    failure: ../Set Message for exit
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: TraceFilter
+  fields:
+    traceMsg: '##### Trace -- ASE ##### '
+    traceBody: true
+    name: Trace Filter
+  routing:
+    success: ../Restore Message
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: RestoreContentBodyFromAttributeFilter
+  fields:
+    name: Restore Message
+  routing:
+    success: ../Restore Headers
+  logging:
+    fatal: 'Error in restoring the message. Error: ${circuit.exception}'
+    failure: Failed to restore the message
+    success: Success in restoring the message
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Restore Headers
+    script: '{{file "ASE Request Handler-Files/Restore Headers.groovy"}}'
+  routing:
+    success: ../True Filter
+    failure: ../True Filter
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: TrueFilter
+  fields:
+    name: True Filter
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: ChangeMessageFilter
+  fields:
+    body: Forbidden due to block from ASE
+    outputContentType: Application/Text
+    name: Set Message for exit
+  routing:
+    success: ../Reflect Forbidden
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 403
+    name: Reflect Forbidden
+  routing:
+    success: ../Forbidden Status Check
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: SetResponseStatusFilter
+  fields:
+    name: Forbidden Status Check
+  routing:
+    success: ../False Filter
+  logging:
+    fatal: 'SetResponseStatusFilter error. Error: ${circuit.exception}'
+    failure: Failed to set the response status
+    success: Successfully set the response status
+- type: FalseFilter
+  fields:
+    name: False Filter
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""
+- type: RestoreContentBodyFromAttributeFilter
+  fields:
+    name: Fault Handler Restore Message
+  logging:
+    fatal: 'Error in restoring the message. Error: ${circuit.exception}'
+    failure: Failed to restore the message
+    success: Success in restoring the message

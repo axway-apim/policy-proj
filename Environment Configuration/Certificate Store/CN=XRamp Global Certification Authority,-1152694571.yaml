@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=XRamp Global Certification Authority, O=XRamp Security Services Inc, OU=www.xrampsecurity.com, C=US
+  content: '{{file "CN=XRamp Global Certification Authority,-1152694571-cert.pem"}}'

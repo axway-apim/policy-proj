@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: EMAILADDRESS=info@e-szigno.hu, CN=Microsec e-Szigno Root CA 2009, O=Microsec Ltd., L=Budapest, C=HU
+  content: '{{file "EMAILADDRESS=info@e-szigno.hu, CN=Micros-1210274719-cert.pem"}}'

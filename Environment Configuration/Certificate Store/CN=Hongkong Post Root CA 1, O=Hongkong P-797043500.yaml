@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Hongkong Post Root CA 1, O=Hongkong Post, C=HK
+  content: '{{file "CN=Hongkong Post Root CA 1, O=Hongkong P-797043500-cert.pem"}}'

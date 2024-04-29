@@ -1,0 +1,13 @@
+---
+type: JMSService
+fields:
+  name: Embedded Apache ActiveMQ
+  userName: ""
+  password: ""
+  SSLTrustedCerts: []
+  SSLCipherSuite: ""
+  mq.hostName: ""
+  mq.port: []
+  mq.queueManager: ""
+  mq.channel: ""
+  jmsClientID: ""

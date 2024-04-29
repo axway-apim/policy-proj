@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: C=ES, O=ACCV, OU=PKIACCV, CN=ACCVRAIZ1
+  content: '{{file "C=ES, O=ACCV, OU=PKIACCV, CN=ACCVRAIZ1-cert.pem"}}'

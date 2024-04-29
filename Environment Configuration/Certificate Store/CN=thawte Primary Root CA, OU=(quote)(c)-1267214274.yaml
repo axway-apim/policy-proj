@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=thawte Primary Root CA, OU="(c) 2006 thawte, Inc. - For authorized use only", OU=Certification Services Division, O="thawte, Inc.", C=US
+  content: '{{file "CN=thawte Primary Root CA, OU=(quote)(c)-1267214274-cert.pem"}}'

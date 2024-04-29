@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1,O=DigiCert Inc,C=US
+  content: '{{file "CN=DigiCert Global G2 TLS RSA SHA256 202-741948471-cert.pem"}}'

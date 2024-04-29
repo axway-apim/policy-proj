@@ -1,0 +1,11 @@
+---
+type: KPSReadWriteStore
+fields:
+  key: username
+  readKey: username
+  encrypted: password
+  name: HeroesCharactersRegistry
+  description: null
+  type: /Environment Configuration/Key Property Stores/QuickStart/Types/HeroesCharacters
+  dataSource: /Environment Configuration/Key Property Stores/QuickStart/Data Sources/File Storage
+  aliases: heroes

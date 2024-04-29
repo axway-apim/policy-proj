@@ -1,0 +1,42 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call 'Verify and Extract JWT'
+  name: Revoke Token
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Axway JWT Access Token Policies/OAuth 2.0/JWT Policies/Verify and Extract JWT
+    name: Call 'Verify and Extract JWT'
+  routing:
+    success: ../Set Message OAuth Token to Revoke
+    failure: '../Call ''Return HTTP Error 400: Bad Request'''
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: ChangeMessageFilter
+  fields:
+    body: token=${var.axway.oauth.accesstoken}
+    outputContentType: application/x-www-form-urlencoded
+    name: Set Message OAuth Token to Revoke
+  routing:
+    success: ../Revoke OAuth token
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: RevokeOAuthAccessTokenFilter
+  fields:
+    tokenStore: /Libraries/OAuth2 Stores/Access Token Stores/OAuth Access Token Store
+    metricsMask: 1
+    name: Revoke OAuth token
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: '/Policies/Policy Library/Return HTTP Error 400: Bad Request'
+    name: 'Call ''Return HTTP Error 400: Bad Request'''
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut

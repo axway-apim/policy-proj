@@ -1,0 +1,10 @@
+---
+type: LdapDirectory
+fields:
+  name: api-env LDAP
+  url: ldap://api-env:389
+  authType: SIMPLE
+  userName: cn=Administrator,dc=demo.axway,dc=com
+  password: JHtlbnYuTERBUC5wYXNzd29yZH0=
+  authRealm: ""
+  sslEnabled: false

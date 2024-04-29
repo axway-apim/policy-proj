@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Always pass filter
+  description: Always pass
+  engineName: nashorn
+  script: '{{file "Always pass filter.nashorn.js"}}'

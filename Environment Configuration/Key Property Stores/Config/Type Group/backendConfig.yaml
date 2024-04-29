@@ -1,0 +1,17 @@
+---
+type: KPSType
+fields:
+  name: backendConfig
+children:
+- type: KPSTypeProperty
+  fields:
+    name: name
+    type: java.lang.String
+    key: ""
+    value: ""
+- type: KPSTypeProperty
+  fields:
+    name: value
+    type: java.lang.String
+    key: ""
+    value: ""

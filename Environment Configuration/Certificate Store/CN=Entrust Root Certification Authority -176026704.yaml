@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Entrust Root Certification Authority - G2, OU="(c) 2009 Entrust, Inc. - for authorized use only", OU=See www.entrust.net/legal-terms, O="Entrust, Inc.", C=US
+  content: '{{file "CN=Entrust Root Certification Authority -176026704-cert.pem"}}'

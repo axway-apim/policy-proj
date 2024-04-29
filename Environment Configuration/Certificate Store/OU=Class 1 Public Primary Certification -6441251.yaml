@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: OU=Class 1 Public Primary Certification Authority, O="VeriSign, Inc.", C=US
+  content: '{{file "OU=Class 1 Public Primary Certification -6441251-cert.pem"}}'

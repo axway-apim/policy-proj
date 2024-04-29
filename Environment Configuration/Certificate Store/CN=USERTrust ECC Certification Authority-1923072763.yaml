@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=USERTrust ECC Certification Authority, O=The USERTRUST Network, L=Jersey City, ST=New Jersey, C=US
+  content: '{{file "CN=USERTrust ECC Certification Authority-1923072763-cert.pem"}}'

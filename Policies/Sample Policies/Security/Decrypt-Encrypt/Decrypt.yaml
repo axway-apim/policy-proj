@@ -1,0 +1,27 @@
+---
+type: FilterCircuit
+fields:
+  start: ./1.Configure XML-Decryption Settings
+  name: Decrypt
+  description: ""
+children:
+- type: SetDecryptionPropertiesFilter
+  fields:
+    decryptAll: true
+    removeEncryptedKey: true
+    decryptionKeyAttribute: ""
+    algorithmSuite: ""
+    name: 1.Configure XML-Decryption Settings
+  routing:
+    success: ../2.Apply XML-Decryption
+  logging:
+    fatal: 'Error occurred while setting the XML decryption. Error: ${circuit.exception}'
+    failure: Setting XML decryption properties failed
+    success: Setting XML decryption properties passed
+- type: XMLDecryptionFilter
+  fields:
+    name: 2.Apply XML-Decryption
+  logging:
+    fatal: 'Error occurred during XML decryption. Error: ${circuit.exception}'
+    failure: XML decryption failed
+    success: XML decryption passed

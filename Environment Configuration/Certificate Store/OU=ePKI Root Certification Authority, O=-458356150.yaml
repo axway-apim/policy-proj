@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: OU=ePKI Root Certification Authority, O="Chunghwa Telecom Co., Ltd.", C=TW
+  content: '{{file "OU=ePKI Root Certification Authority, O=-458356150-cert.pem"}}'

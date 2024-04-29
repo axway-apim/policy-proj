@@ -1,0 +1,203 @@
+---
+type: FilterCircuit
+fields:
+  start: ./1. HTTP Basic
+  name: OrderProduct
+  description: ""
+children:
+- type: HttpBasicFilter
+  fields:
+    credentialFormat: Username
+    removeAuthNHeader: false
+    repository: /External Connections/Authentication Repositories/KPS Repositories/Heroes
+    name: 1. HTTP Basic
+  routing:
+    success: ../2. Remove HTTP Header
+    failure: ../Set Unauthorized Error
+  logging:
+    fatal: 'Error occurred while authenticating via HTTP Basic. Error: ${circuit.exception}'
+    failure: HTTP basic authentication failed
+    success: HTTP basic authentication success for ${authentication.subject.id}
+- type: RemoveHTTPHeaderFilter
+  fields:
+    headerName: Authorization
+    errorNoHeader: true
+    name: 2. Remove HTTP Header
+  routing:
+    success: ../3. Check 'Heroes'
+  logging:
+    fatal: 'Error in removing the HTTP header from the message. Error: ${circuit.exception}'
+    failure: Failed in removing the HTTP header from the message
+    success: Success in removing the HTTP header from the message
+- type: CompareAttributeFilter
+  fields:
+    name: 3. Check 'Heroes'
+  routing:
+    success: ../4. Throttle Users Max 10 Per Minute
+    failure: ../Invalid Faction
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${kps.heroes[authentication.subject.id].faction}
+      matchType: IS
+      expression: Heroes
+- type: MaximumNumberMsgsFilter
+  fields:
+    algorithm: FTW
+    numberMessages: 10
+    timePeriodUnit: minute
+    key: ${authentication.subject.id}
+    name: 4. Throttle Users Max 10 Per Minute
+  routing:
+    success: ../5. Extract REST Request Attributes
+    failure: ../Throttle Error
+  logging:
+    fatal: 'Throttle filter aborted: ${circuit.exception}'
+    failure: Maximum number of messages filter was triggered
+    success: Maximum number of messages filter was not triggered
+- type: ExtractRESTAttributesFilter
+  fields:
+    queryAttributePrefix: http.querystring
+    decode: true
+    name: 5. Extract REST Request Attributes
+  routing:
+    success: ../6. Validate REST Filter
+- type: ValidateRESTFilter
+  fields:
+    httpMethod: POST
+    name: 6. Validate REST Filter
+  routing:
+    success: ../7. Check 'Order Online'?
+    failure: ../Method Error
+- type: CompareAttributeFilter
+  fields:
+    name: 7. Check 'Order Online'?
+  routing:
+    success: '../Extract Path Parameter: product'
+    failure: ../Not Authorized
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${kps.heroes[authentication.subject.id].shoponline}
+      matchType: IS
+      expression: "true"
+- type: PathParameterFilter
+  fields:
+    uriTemplate: /{serviceLoc}/product/{product}
+    name: 'Extract Path Parameter: product'
+  routing:
+    success: ../Connect to Heroes' REST Service
+  children:
+  - type: OutputPropertyDefinition
+    fields:
+      selector: depot.product
+      name: product
+      type: java.lang.String
+- type: ConnectToURLFilter
+  fields:
+    url: http://heroes.org/productService/REST/OrderProduct/${depot.product}
+    caCerts: []
+    useRootCerts: false
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Connect to Heroes' REST Service
+  routing:
+    success: ../9. Reflect 200 OK
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: Reflector
+  fields:
+    name: 9. Reflect 200 OK
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: ChangeMessageFilter
+  fields:
+    body: '{"error":"You are not authorized to purchase product: ${http.path[3]}"}'
+    outputContentType: application/json
+    name: Not Authorized
+  routing:
+    success: ../Reflect 403 Forbidden
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 403
+    name: Reflect 403 Forbidden
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: ChangeMessageFilter
+  fields:
+    body: '{"error":"Invalid request"}'
+    outputContentType: application/json
+    name: Method Error
+  routing:
+    success: ../Reflect 400 Bad Request
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 400
+    name: Reflect 400 Bad Request
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: ChangeMessageFilter
+  fields:
+    body: '{"error":"Exceeded maximum number of requests - throttling request."}'
+    outputContentType: application/json
+    name: Throttle Error
+  routing:
+    success: ../Reflect 403 Forbidden
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: ChangeMessageFilter
+  fields:
+    body: '{"error":"This service is for Heroes only"}'
+    outputContentType: application/json
+    name: Invalid Faction
+  routing:
+    success: ../Reflect 403 Forbidden
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: ChangeMessageFilter
+  fields:
+    body: '{"error":"Unauthorized"}'
+    outputContentType: application/json
+    name: Set Unauthorized Error
+  routing:
+    success: ../Reflect 401 Unauthorized
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 401
+    name: Reflect 401 Unauthorized
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

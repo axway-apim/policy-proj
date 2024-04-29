@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Certum Trusted Network CA 2, OU=Certum Certification Authority, O=Unizeto Technologies S.A., C=PL
+  content: '{{file "CN=Certum Trusted Network CA 2, OU=Certu-635224253-cert.pem"}}'

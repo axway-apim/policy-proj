@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=VeriSign Class 3 Public Primary Certification Authority - G5, OU="(c) 2006 VeriSign, Inc. - For authorized use only", OU=VeriSign Trust Network, O="VeriSign, Inc.", C=US
+  content: '{{file "CN=VeriSign Class 3 Public Primary Certi-1719888548-cert.pem"}}'

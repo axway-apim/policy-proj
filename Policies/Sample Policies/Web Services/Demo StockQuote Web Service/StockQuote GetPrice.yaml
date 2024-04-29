@@ -1,0 +1,49 @@
+---
+type: FilterCircuit
+fields:
+  start: ./1. Retrieve StockQuote Symbol
+  name: StockQuote GetPrice
+  description: ""
+children:
+- type: AttributeExtractXPathFilter
+  fields:
+    attributeLocation: /Resources/XPath Definitions/Attribute Locations/symbol
+    attributeName: stockquote.symbol
+    name: 1. Retrieve StockQuote Symbol
+  routing:
+    success: ../2. Set StockQuote Price
+  logging:
+    fatal: 'Error occurred while extracting attributes via XPath. Error: ${circuit.exception}'
+    failure: Failed to extract attributes via XPath
+    success: Extracted attribute from message via XPath
+- type: JavaScriptFilter
+  fields:
+    requiredProperties: []
+    generatedProperties: stockquote.price
+    consumedProperties: []
+    name: 2. Set StockQuote Price
+    script: '{{file "StockQuote GetPrice-Files/2. Set StockQuote Price.nashorn.js"}}'
+  routing:
+    success: ../3. Create SOAP Response
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: ChangeMessageFilter
+  fields:
+    outputContentType: application/soap+xml
+    name: 3. Create SOAP Response
+    body: '{{file "StockQuote GetPrice-Files/3. Create SOAP Response.xml"}}'
+  routing:
+    success: ../4. Set HTTP Response Code
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    name: 4. Set HTTP Response Code
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

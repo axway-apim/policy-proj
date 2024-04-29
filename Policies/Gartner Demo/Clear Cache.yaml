@@ -1,0 +1,40 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Retrieve from HTTP header
+  name: Clear Cache
+  description: ""
+children:
+- type: AttributeExtractHTTPHeaderFilter
+  fields:
+    headerName: cacheName
+    attributeName: cacheName
+    useQueryParameter: true
+    name: Retrieve from HTTP header
+  routing:
+    success: ../Scripting Language
+  logging:
+    fatal: 'Error occurred while extracting attributes from HTTP header. Error: ${circuit.exception}'
+    failure: Failed to extract attribute HTTP header
+    success: Extracted attribute from HTTP header
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Scripting Language
+    script: '{{file "Clear Cache-Files/Scripting Language.groovy"}}'
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

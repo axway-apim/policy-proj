@@ -1,0 +1,6 @@
+---
+type: Script
+fields:
+  name: Base64 Decode
+  description: Retrieves a message attribute and base64 decodes it
+  script: '{{file "Base64 Decode.js"}}'

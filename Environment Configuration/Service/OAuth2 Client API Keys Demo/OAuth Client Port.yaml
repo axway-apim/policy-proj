@@ -1,0 +1,12 @@
+---
+type: SSLInterface
+fields:
+  serverCert: /Environment Configuration/Certificate Store/CN=Change this for production
+  caCert: []
+  ciphers: FIPS:!SSLv3:!aNULL
+  ssloptions:
+  - nosslv2
+  - nosslv3
+  resolveSubjectCNtoNetAddr: false
+  name: OAuth Client Port
+  port: 8088

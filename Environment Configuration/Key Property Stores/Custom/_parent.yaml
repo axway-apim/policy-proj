@@ -1,0 +1,7 @@
+---
+type: KPSPackage
+fields:
+  name: Custom
+  description: ""
+  alias: ""
+  dataSource: ./Data Sources/Cassandra Storage

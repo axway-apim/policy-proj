@@ -1,0 +1,6 @@
+---
+type: Cache
+fields:
+  name: Auth0
+  eternal: true
+  timeToLiveSeconds: 600

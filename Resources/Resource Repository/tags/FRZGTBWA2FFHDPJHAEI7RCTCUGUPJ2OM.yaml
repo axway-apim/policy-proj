@@ -1,0 +1,9 @@
+---
+type: ResourceSetTag
+fields:
+  ID: FRZGTBWA2FFHDPJHAEI7RCTCUGUPJ2OM
+  resourceID: JVBRZ5YCXKBEJTIUTZ7TY6C4H77XY3BX
+  comment: Registering EC2 Web Service
+  creator: dmckenna
+  timestamp: 1588470243056
+  version: 1

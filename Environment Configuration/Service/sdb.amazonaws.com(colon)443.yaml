@@ -1,0 +1,11 @@
+---
+type: RemoteHost
+fields:
+  alias: sdb.amazonaws.com:443
+  name: sdb.amazonaws.com
+  port: 443
+  offerTlsServerName: false
+children:
+- type: RoundRobinLbCfg
+  fields:
+    name: 7991aa68-df33-474a-9303-195500a8a00d

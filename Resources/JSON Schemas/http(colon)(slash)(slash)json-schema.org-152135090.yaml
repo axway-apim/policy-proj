@@ -1,0 +1,5 @@
+---
+type: JSONSchema
+fields:
+  URL: http://json-schema.org/card
+  contents: '{{file "http(colon)(slash)(slash)json-schema.org-152135090.json"}}'

@@ -1,0 +1,29 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Trace Filter
+  name: Authenticate LDAP Account
+  description: ""
+children:
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceLevel: 3
+    name: Trace Filter
+  routing:
+    success: ../Attribute Authentication
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: AttributeAuthnFilter
+  fields:
+    username: ${authN.loginname}
+    password: ${authN.password}
+    credentialFormat: Username
+    repository: /External Connections/Authentication Repositories/LDAP Repositories/api-env OpenLDAP
+    name: Attribute Authentication
+  logging:
+    fatal: 'Error during authentication using username-password attributes. Error: ${circuit.exception}'
+    failure: Failed to authenticate using username-password attributes.
+    success: Authenticated via username-password attributes sucessfully.

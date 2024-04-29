@@ -1,0 +1,64 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Is this an internal call from the 'REST to SOAP API' transform service?
+  name: Parse SOAP Operation
+  description: ""
+children:
+- type: CompareAttributeFilter
+  fields:
+    name: Is this an internal call from the 'REST to SOAP API' transform service?
+  routing:
+    success: ../1. Retrieve SOAP Operation Name
+    failure: ../Set Service context
+  logging:
+    maskType: FILTER
+    mask: 0
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${service.name}
+      matchType: IS
+      expression: REST to SOAP API
+- type: AttributeExtractXPathFilter
+  fields:
+    attributeLocation: /Resources/XPath Definitions/Attribute Locations/The Soap Operation Name
+    attributeName: soap.operation
+    name: 1. Retrieve SOAP Operation Name
+  routing:
+    success: ../2. Switch on SOAP Operation Name
+  logging:
+    mask: 7
+    fatal: 'Error occurred while extracting attributes via XPath. Error: ${circuit.exception}'
+    failure: Failed to extract attributes via XPath
+    success: Extracted attribute from message via XPath
+- type: SwitchFilter
+  fields:
+    attributeName: ${soap.operation}
+    defaultOption: RETURN_FALSE
+    defaultCircuit: /null
+    name: 2. Switch on SOAP Operation Name
+  logging:
+    mask: 7
+  children:
+  - type: SwitchCircuitReference
+    fields:
+      comparatorType: is
+      compareWith: GetProducts
+      name: Id-0001346402245800-ffffffff92a8a60b-1
+      priority: 1
+      circuitPK: /Policies/QuickStart/Virtualized Services/SOAP/GetProducts
+  - type: SwitchCircuitReference
+    fields:
+      comparatorType: is
+      compareWith: OrderProduct
+      name: Id-0001346410335924-ffffffffde3cc13f-1
+      priority: 0
+      circuitPK: /Policies/QuickStart/Virtualized Services/SOAP/OrderProduct
+- type: ServiceContextFilter
+  fields:
+    serviceName: Virtualized SOAP API
+    metricsMask: 7
+    name: Set Service context
+  routing:
+    success: ../1. Retrieve SOAP Operation Name

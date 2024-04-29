@@ -1,0 +1,7 @@
+---
+type: KPSPackage
+fields:
+  name: Config
+  description: CSOSConfiguration
+  alias: csos
+  dataSource: ./DataSources/Cassandra Storage

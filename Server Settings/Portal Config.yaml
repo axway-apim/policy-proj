@@ -1,0 +1,40 @@
+---
+type: PortalConfiguration
+fields:
+  smtpServer: /External Connections/SMTP Servers/api-env SMTP
+  quotaCaching: CASSANDRA
+  quotaCachingMinWindowSecs: 0
+  vapiPollerPeriodMs: 200
+  usrprovEnabled: true
+  usrprovAuthNCircuit: /Policies/Sample Policies/API Management Identity Provider api-env/LDAP/Authenticate LDAP Account
+  usrprovGetUserInfoCircuit: /Policies/Sample Policies/API Management Identity Provider api-env/LDAP/Retrieve LDAP Account Information
+  usrprovAccountCreateSuccessCircuit: /Policies/Sample Policies/API Management Identity Provider api-env/Account Creation Success
+  usrprovAccountCreateFailureCircuit: /Policies/Sample Policies/API Management Identity Provider api-env/Account Creation Failure
+  apiregAuthenticationPolicies: /Policies/Axway JWT Access Token Policies/API Manager JWT Validation/APIManager JWT Validation
+  apiregGlobalRequestPolicies: /Policies/AVN Sample Policies/Security Main
+  apiregGlobalResponsePolicies: /Policies/Forrester Wave Demo/Global Policy/Access Logger
+  apiregRequestPolicies:
+  - /Policies/AVN Sample Policies/Basic authN
+  - /Policies/AVN Sample Policies/Authorize API by ORG
+  - /Policies/AVN Sample Policies/Get products from DB with authN for cache
+  - /Policies/API Manager Policies/Create Transaction-ID
+  - /Policies/ASESecurity/ASE Request Handler
+  apiregRoutingPolicies:
+  - /Policies/Gartner Demo/Route Cache
+  - /Policies/Gartner Demo/Route to JMS
+  apiregResponsePolicies: /Policies/ASESecurity/ASE Response Handler
+  apiregOAuthTokenInfoPolicies:
+  - /Policies/IDP Integrations/Auth0 as IDP
+  - /Policies/IDP Integrations/AzureAD as IDP
+  - /Policies/IDP Integrations/Okta as IDP
+  - /Policies/IDP Integrations/PingID as IDP
+  apiregFaultHandlerPolicies:
+  - /Policies/AVN Sample Policies/Global Fault Handler
+  - /Policies/Generated Policies/REST API's/Templates/Default GraphQL Fault Handler
+  - /Policies/Generated Policies/REST API's/Templates/Default Fault Handler
+  promotionCircuit: /Policies/Forrester Wave Demo/API Promotion
+  apiregOAuthTokenStores: /Libraries/OAuth2 Stores/Access Token Stores/OAuth Access Token Store
+  apiregOAuthClientProfiles: /External Connections/Auth Profiles/OAuth2/API Gateway/Sample Client Authzcode App
+  metricsStoringEnabled: true
+  dbConn: /External Connections/Database Connections/Default Database Connection
+  name: Portal Config

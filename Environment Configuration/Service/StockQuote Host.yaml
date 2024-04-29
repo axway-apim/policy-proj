@@ -1,0 +1,17 @@
+---
+type: RemoteHost
+fields:
+  alias: StockQuote Host
+  name: stockquote.com
+  allowHTTP11: true
+  maxConnections: 128
+  includeContentLengthRequest: true
+  offerTlsServerName: false
+children:
+- type: AddressRank
+  fields:
+    rank: 0
+    addresses: localhost:${env.PORT.SAMPLE.SERVICES}
+- type: RoundRobinLbCfg
+  fields:
+    name: 0da0e121-6002-44f1-ba12-999a29bfbb56

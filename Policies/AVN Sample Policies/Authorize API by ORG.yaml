@@ -1,0 +1,129 @@
+---
+type: FilterCircuit
+fields:
+  start: ./HTTP Basic
+  name: Authorize API by ORG
+  description: ""
+children:
+- type: HttpBasicFilter
+  fields:
+    credentialFormat: Username
+    removeAuthNHeader: false
+    repository: /External Connections/Authentication Repositories/LDAP Repositories/api-env OpenLDAP
+    name: HTTP Basic
+  routing:
+    success: ../Trace Filter
+    failure: ../Set Attribute Filter body 401
+  logging:
+    fatal: 'Error occurred while authenticating via HTTP Basic. Error: ${circuit.exception}'
+    failure: HTTP basic authentication failed
+    success: HTTP basic authentication success for ${authentication.subject.id}
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceBody: true
+    name: Trace Filter
+  routing:
+    success: ../Retrieve User info
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: AttributeExtractLdapFilter
+  fields:
+    ldapDir: /External Connections/LDAP Directories/api-env LDAP
+    name: Retrieve User info
+  routing:
+    success: ../Compare Organization
+  logging:
+    fatal: 'Error occurred while extracting attributes from LDAP. Error: ${circuit.exception}'
+    failure: Failed to extract attributes from LDAP
+    success: Extracted attributes from LDAP
+  children:
+  - type: LookupAttribute
+    fields:
+      name: employeeType
+  - type: LookupAttribute
+    fields:
+      name: cn
+  - type: LdapSearchAttributes
+    fields:
+      name: Retrieve User info
+      base: ou=users,dc=demo.axway,dc=com
+      filter: (&(uid=${authentication.subject.id})(objectClass=inetOrgPerson))
+      scope: 3
+  - type: LookupAttribute
+    fields:
+      name: mail
+  - type: LookupAttribute
+    fields:
+      name: description
+  - type: LookupAttribute
+    fields:
+      name: o
+- type: CompareAttributeFilter
+  fields:
+    name: Compare Organization
+  routing:
+    failure: ../Set Attribute Filter body 403
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${user[0].o[0]}
+      expression: ${api.custom.properties.Access}
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.body
+    attributeValue: '{"Error": "You are not authorized to access this API"}'
+    name: Set Attribute Filter body 403
+  routing:
+    success: ../Set Attribute Filter http code 403
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.http.code
+    attributeValue: 403
+    name: Set Attribute Filter http code 403
+  routing:
+    success: ../False Filter 403
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: FalseFilter
+  fields:
+    name: False Filter 403
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.body
+    attributeValue: '{"Error": "Enter valid user ID and password"}'
+    name: Set Attribute Filter body 401
+  routing:
+    success: ../Set Attribute Filter http code 401
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.http.code
+    attributeValue: 401
+    name: Set Attribute Filter http code 401
+  routing:
+    success: ../False Filter 401
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: FalseFilter
+  fields:
+    name: False Filter 401
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""

@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=GDCA TrustAUTH R5 ROOT, O="GUANG DONG CERTIFICATE AUTHORITY CO.,LTD.", C=CN
+  content: '{{file "CN=GDCA TrustAUTH R5 ROOT, O=(quote)GUAN-1497323381-cert.pem"}}'

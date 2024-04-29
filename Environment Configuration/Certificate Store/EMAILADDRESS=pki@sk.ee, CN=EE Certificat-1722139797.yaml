@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: EMAILADDRESS=pki@sk.ee, CN=EE Certification Centre Root CA, O=AS Sertifitseerimiskeskus, C=EE
+  content: '{{file "EMAILADDRESS=pki@sk.ee, CN=EE Certificat-1722139797-cert.pem"}}'

@@ -1,0 +1,17 @@
+---
+type: ApiKeySignerGroup
+fields:
+  name: API Key Signers
+children:
+- type: ApiKeySigner
+  fields:
+    name: No Signing
+    class: ""
+- type: ApiKeySigner
+  fields:
+    name: Amazon Access Key Signing V2
+    class: com.vordel.circuit.apikeys.AWSAuthenticateV2RequestREST
+- type: ApiKeySigner
+  fields:
+    name: Amazon Access Key Signing V4
+    class: com.vordel.circuit.apikeys.AWSAuthenticateV4RequestREST

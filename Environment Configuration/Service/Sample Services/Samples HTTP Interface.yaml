@@ -1,0 +1,6 @@
+---
+type: InetInterface
+fields:
+  name: Samples HTTP Interface
+  port: ${env.PORT.SAMPLE.SERVICES}
+  enabled: false

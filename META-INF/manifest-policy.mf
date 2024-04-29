@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Name: QuickStart Server Configuration
+Description: The QuickStart Server configuration policies
+Version: v1
+VersionComment: Updated OAuth configuration
+ChangedBy: admin
+

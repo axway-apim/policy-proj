@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=E-Tugra Certification Authority, OU=E-Tugra Sertifikasyon Merkezi, O=E-Tuğra EBG Bilişim Teknolojileri ve Hizmetleri A.Ş., L=Ankara, C=TR
+  content: '{{file "CN=E-Tugra Certification Authority, OU=E-2133541829-cert.pem"}}'

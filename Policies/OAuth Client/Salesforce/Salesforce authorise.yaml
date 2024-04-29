@@ -1,0 +1,70 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call 'Check/Create Session Cookie'
+  name: Salesforce authorise
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/OAuth Client/Session Management/Check/Create Session Cookie
+    name: Call 'Check/Create Session Cookie'
+  routing:
+    success: ../Call 'Is logged in'
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/OAuth Client/Session Management/Is Logged In
+    name: Call 'Is logged in'
+  routing:
+    success: ../Retrieve OAuth Client Access Token From Token Storage
+    failure: ../Redirect to login
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: RetrieveTokenFromStorageFilter
+  fields:
+    profile: /External Connections/Auth Profiles/OAuth2/SalesForce/salesforce jwt app
+    name: Retrieve OAuth Client Access Token From Token Storage
+  routing:
+    success: ../HTTP Redirect
+    failure: ../Get an OAuth2 Client Access Token
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /client
+    outputContentType: text/html
+    content: Have token!
+    name: HTTP Redirect
+- type: GetOAuthClientTokenFilter
+  fields:
+    profile: /External Connections/Auth Profiles/OAuth2/SalesForce/salesforce jwt app
+    name: Get an OAuth2 Client Access Token
+  routing:
+    success: ../HTTP Redirect
+  children:
+  - type: ConnectionFilter
+    fields:
+      caCerts: []
+      ciphers: DEFAULT
+      ssloptions:
+      - nosslv2
+      - nosslv3
+      - notlsv1
+      - notlsv1_1
+      name: Connection Details
+    children:
+    - type: SaveToFileFilter
+      fields:
+        name: Persistence Details
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /client/logout/
+    outputContentType: text/html
+    content: fail
+    name: Redirect to login

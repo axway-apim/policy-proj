@@ -1,0 +1,37 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Make the "Forbidden" Message
+  name: 'Return HTTP Error 403: Access Denied (Forbidden)'
+children:
+- type: ChangeMessageFilter
+  fields:
+    body: Access Denied
+    outputContentType: text/html
+    name: Make the "Forbidden" Message
+  routing:
+    success: ../Pass the "Forbidden" message back
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 403
+    name: Pass the "Forbidden" message back
+  routing:
+    success: ../Flag as blocked message
+  logging:
+    maskType: FILTER
+    mask: 6
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message to IP Address ${http.request.clientaddr}
+- type: SetResponseStatusFilter
+  fields:
+    responseStatus: 3
+    name: Flag as blocked message
+  logging:
+    fatal: 'SetResponseStatusFilter error. Error: ${circuit.exception}'
+    failure: Failed to set the response status
+    success: Successfully set the response status

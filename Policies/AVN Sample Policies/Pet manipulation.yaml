@@ -1,0 +1,18 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Execute Data Map
+  name: Pet manipulation
+  description: ""
+children:
+- type: TFXSLTMappingFilter
+  fields:
+    map: /System/TFXSLT Mapping Group/Pets
+    name: Execute Data Map
+  children:
+  - type: SourceDocument
+    fields:
+      ID: 33d952a4-54ed-456b-afda-c2a50a24bdb8
+      messageAttribute: content.body
+      schemaName: /mnt/c/Users/anartovich/Downloads/Pet.schema.json
+      order: 1

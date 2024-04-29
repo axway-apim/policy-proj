@@ -1,0 +1,6 @@
+---
+type: KPSFileDataSource
+fields:
+  directory: ${VDISTDIR}/webapps/quickstart/kps
+  name: File Storage
+  description: File Storage

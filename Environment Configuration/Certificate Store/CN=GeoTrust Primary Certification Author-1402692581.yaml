@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=GeoTrust Primary Certification Authority, O=GeoTrust Inc., C=US
+  content: '{{file "CN=GeoTrust Primary Certification Author-1402692581-cert.pem"}}'

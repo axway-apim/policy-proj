@@ -1,0 +1,6 @@
+---
+type: XMLFirewall
+fields:
+  filterCircuit: /Policies/API Manager Policies/API Manager Static Content Protection Policy
+  uriprefix: /logout
+  httpMethod: GET

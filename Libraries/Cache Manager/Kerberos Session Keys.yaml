@@ -1,0 +1,5 @@
+---
+type: Cache
+fields:
+  name: Kerberos Session Keys
+  eternal: true

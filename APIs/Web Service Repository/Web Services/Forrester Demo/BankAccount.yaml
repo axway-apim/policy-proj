@@ -1,0 +1,16 @@
+---
+type: WebService
+fields:
+  name: BankAccount
+  resourceSetID: XB4RT4WQJX5O4NDE3GR6UWN2XYR7NJF7
+children:
+- type: OperationList
+  fields:
+    name: '{http://www.axway.com/bank}BankAccount'
+  children:
+  - type: Operation
+    fields:
+      bindingName: '{http://www.axway.com/bank}BankAccountSoap12'
+      bindingOperation: RetrieveAccount
+      bindingInput: null
+      bindingOutput: null

@@ -1,0 +1,83 @@
+---
+type: FilterCircuit
+fields:
+  start: ./1. Verify the Request XML Signature
+  name: Signature Verification
+  description: ""
+children:
+- type: IntegrityVerifySignatureFilter
+  fields:
+    actor: '##current##'
+    sigPosition: 1
+    signedContentElementSpecifier:
+    - /System/Element Specifiers/http://www.w3.org/2003/05/soap-envelope,Body,1
+    - /System/Element Specifiers/http://schemas.xmlsoap.org/soap/envelope/,Body,1
+    extractNodeListAttributeName: node.list
+    verifyForAuthentication: true
+    algorithmSuite: ""
+    sourceAttribute: ""
+    removeWsSecurity: true
+    name: 1. Verify the Request XML Signature
+  routing:
+    success: ../2A. Connect to stockquote Web Service
+    failure: ../2B. Set HTTP Response Code to 403
+  logging:
+    fatal: 'Integrity: Signature verification error. Error: ${circuit.exception}'
+    failure: 'Integrity: Signature verification failed'
+    success: 'Integrity: Signature verification passed'
+- type: ConnectToURLFilter
+  fields:
+    url: http://stockquote.com/stockquote/instance1
+    caCerts: []
+    useRootCerts: false
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: 2A. Connect to stockquote Web Service
+  routing:
+    success: ../3. Sign the Response
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: GenerateSignatureFilter
+  fields:
+    failIfNoNodes: false
+    wsuIdElementSpecification:
+    - /System/Element Specifiers/http://www.w3.org/2003/05/soap-envelope,Body,1
+    - /System/Element Specifiers/http://schemas.xmlsoap.org/soap/envelope/,Body,1
+    extractNodeListAttributeName: node.list
+    signingCert: /Environment Configuration/Certificate Store/Samples Test Certificate
+    signingCertAttribute: certificate
+    symmetricKeyAttribute: symmetric.key
+    symmetricKeyEncryptionCertAttribute: certificate
+    keyWrapAlgorithm: http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p
+    attachmentTransform: ""
+    timestampType: 1
+    timestampLifeTimeSecs: 300
+    name: 3. Sign the Response
+  logging:
+    fatal: 'Error during message signing. Error: ${circuit.exception}'
+    failure: Failed to sign message
+    success: Signed message successfully
+  children:
+  - type: KeyInfoFormat
+    fields:
+      keyNameValue: ""
+      keyNameType: []
+      certAttachmentId: ""
+- type: Reflector
+  fields:
+    httpResponseStatus: 403
+    name: 2B. Set HTTP Response Code to 403
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

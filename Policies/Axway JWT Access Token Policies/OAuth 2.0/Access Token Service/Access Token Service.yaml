@@ -1,0 +1,34 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Decide what grant type to use
+  name: Access Token Service
+  description: ""
+children:
+- type: SwitchFilter
+  fields:
+    attributeName: ${content.body.getParameters().get("grant_type")}
+    defaultCircuit: '/Policies/Policy Library/Return HTTP Error 401: Unauthorized'
+    name: Decide what grant type to use
+  children:
+  - type: SwitchCircuitReference
+    fields:
+      comparatorType: is
+      compareWith: password
+      name: Id-0001340660962253-0000000023c88300-4
+      priority: 2
+      circuitPK: /Policies/Axway JWT Access Token Policies/OAuth 2.0/Access Token Service/Resource Owner Password Credentials
+  - type: SwitchCircuitReference
+    fields:
+      comparatorType: is
+      compareWith: refresh_token
+      name: Id-0001340660962253-0000000023c88300-1
+      priority: 1
+      circuitPK: /Policies/Axway JWT Access Token Policies/OAuth 2.0/Access Token Service/Refresh
+  - type: SwitchCircuitReference
+    fields:
+      comparatorType: is
+      compareWith: client_credentials
+      name: Id-0001340660962253-0000000023c88300-3
+      priority: 3
+      circuitPK: /Policies/Axway JWT Access Token Policies/OAuth 2.0/Access Token Service/Client Credentials

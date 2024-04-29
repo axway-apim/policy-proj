@@ -1,0 +1,8 @@
+---
+type: SMTPServer
+fields:
+  name: api-env SMTP
+  smtpServer: email-smtp.us-east-1.amazonaws.com
+  connectionType: TLS/SSL
+  username: AKIA2D7RDKQ5L3SZTFMR
+  password: QkNuOUJTRzh3c0QyR2NFblBNVXVabS9QSExtRFdYdXNrSFFFbHorNHBpdmw=

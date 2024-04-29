@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: OU=VeriSign Trust Network, OU="(c) 1998 VeriSign, Inc. - For authorized use only", OU=Class 3 Public Primary Certification Authority - G2, O="VeriSign, Inc.", C=US
+  content: '{{file "OU=VeriSign Trust Network, OU=(quote)(c)-2115696158-cert.pem"}}'

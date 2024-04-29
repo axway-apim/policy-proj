@@ -1,0 +1,38 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Connect to Villains' SOAP Service
+  name: GetProducts
+  description: ""
+children:
+- type: ConnectToURLFilter
+  fields:
+    url: http://villains.org/productService/SOAP
+    method: POST
+    caCerts: []
+    useRootCerts: false
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Connect to Villains' SOAP Service
+  routing:
+    success: ../2. Reflect Message
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: Reflector
+  fields:
+    name: 2. Reflect Message
+  logging:
+    mask: 0
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Baltimore CyberTrust Code Signing Root, OU=CyberTrust, O=Baltimore, C=IE
+  content: '{{file "CN=Baltimore CyberTrust Code Signing Roo-1350592665-cert.pem"}}'

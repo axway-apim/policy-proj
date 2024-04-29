@@ -1,0 +1,60 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call 'Is Logged In'
+  name: Salesforce JWT
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/OAuth Client/Session Management/Is Logged In
+    name: Call 'Is Logged In'
+  routing:
+    success: ../Retrieve OAuth Client Access Token From Token Storage
+    failure: ../Redirect to login
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: RetrieveTokenFromStorageFilter
+  fields:
+    profile: /External Connections/Auth Profiles/OAuth2/SalesForce/salesforce jwt app
+    name: Retrieve OAuth Client Access Token From Token Storage
+  routing:
+    success: ../Connect to URL
+    failure: ../Reflect Message
+- type: ConnectToURLFilter
+  fields:
+    url: https://eu2.salesforce.com/services/data/v20.0/
+    profile: /External Connections/Auth Profiles/OAuth2/SalesForce/salesforce jwt app
+    caCerts: []
+    ciphers: DEFAULT
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Connect to URL
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: Reflector
+  fields:
+    httpResponseStatus: 400
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /client/logout/
+    outputContentType: text/html
+    content: fail
+    name: Redirect to login

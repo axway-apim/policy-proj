@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: C=DE, O=Atos, CN=Atos TrustedRoot 2011
+  content: '{{file "C=DE, O=Atos, CN=Atos TrustedRoot 2011-cert.pem"}}'

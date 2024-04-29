@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Entrust Root Certification Authority, OU="(c) 2006 Entrust, Inc.", OU=www.entrust.net/CPS is incorporated by reference, O="Entrust, Inc.", C=US
+  content: '{{file "CN=Entrust Root Certification Authority,-2081236569-cert.pem"}}'

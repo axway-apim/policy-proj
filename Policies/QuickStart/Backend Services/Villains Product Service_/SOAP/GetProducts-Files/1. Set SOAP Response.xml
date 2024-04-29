@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+<soap:Body>
+<Products>
+<Product id="deathray" name="Death Ray" />
+<Product id="gascloud" name="Gas Cloud" />
+<Product id="bomb" name="Flash Bang Bomb" />
+</Products>
+</soap:Body>
+</soap:Envelope>

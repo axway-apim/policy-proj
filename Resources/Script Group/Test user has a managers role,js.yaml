@@ -1,0 +1,6 @@
+---
+type: Script
+fields:
+  name: Test user has a managers role
+  description: Test that the user attributes contains the role "Manager"
+  script: '{{file "Test user has a managers role.js"}}'

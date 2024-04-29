@@ -1,0 +1,6 @@
+---
+type: Script
+fields:
+  name: Fail filter
+  description: Always fail
+  script: '{{file "Fail filter.js"}}'

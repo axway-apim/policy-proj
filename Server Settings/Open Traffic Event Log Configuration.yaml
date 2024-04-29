@@ -1,0 +1,6 @@
+---
+type: OpenTrafficEventLog
+fields:
+  enabled: true
+  dirSizeMb: 8192
+  name: Open Traffic Event Log Configuration

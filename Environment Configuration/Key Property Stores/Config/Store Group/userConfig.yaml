@@ -1,0 +1,11 @@
+---
+type: KPSReadWriteStore
+fields:
+  key: username
+  readKey: ""
+  encrypted: password
+  name: userConfig
+  description: User configurations
+  type: /Environment Configuration/Key Property Stores/Config/Type Group/userConfig
+  dataSource: /null
+  aliases: user

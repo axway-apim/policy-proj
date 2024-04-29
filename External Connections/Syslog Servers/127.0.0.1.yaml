@@ -1,0 +1,6 @@
+---
+type: SyslogServer
+fields:
+  name: 127.0.0.1
+  host: 127.0.0.1
+  facility: 'LOCAL0 '

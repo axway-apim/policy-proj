@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=OISTE WISeKey Global Root GA CA, OU=OISTE Foundation Endorsed, OU=Copyright (c) 2005, O=WISeKey, C=CH
+  content: '{{file "CN=OISTE WISeKey Global Root GA CA, OU=O-1071029657-cert.pem"}}'

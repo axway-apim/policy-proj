@@ -1,0 +1,8 @@
+---
+type: SNSAlert
+fields:
+  awsCredential: /External Connections/Auth Profiles/API Keys/Amazon AWS V4 Signing/QA Amazon Account V4
+  region: us-east-2
+  topicArn: arn:aws:sns:us-east-2:934549265897:Axway-API-Manager
+  subject: Trigger from Global Policy
+  name: AWS SNS

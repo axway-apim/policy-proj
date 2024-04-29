@@ -1,0 +1,13 @@
+---
+type: ApiKeyProviderProfile
+fields:
+  name: Amazon AWS V2 Signing
+  apiKeyWhere: ""
+  apiKeyName: ""
+  apiKeySigner: com.vordel.circuit.apikeys.AWSAuthenticateV2RequestREST
+children:
+- type: ApiKeyProfile
+  fields:
+    apikey: CHANGEME
+    apisecret: CHANGEME
+    name: QA Amazon Account V2

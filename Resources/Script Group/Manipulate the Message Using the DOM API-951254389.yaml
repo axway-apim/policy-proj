@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Manipulate the Message Using the DOM API
+  description: Move the <enc:ReferenceList> to be before the <dsig:Signature>
+  engineName: jython
+  script: '{{file "Manipulate the Message Using the DOM API.py"}}'

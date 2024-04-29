@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: O=Government Root Certification Authority, C=TW
+  content: '{{file "O=Government Root Certification Authorit-1788011505-cert.pem"}}'

@@ -1,0 +1,239 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Set Service context
+  name: REST to SOAP Transform
+  description: ""
+children:
+- type: ServiceContextFilter
+  fields:
+    serviceName: REST to SOAP API
+    metricsMask: 7
+    name: Set Service context
+  routing:
+    success: ../Extract REST Request Attributes
+- type: ExtractRESTAttributesFilter
+  fields:
+    useHeaders: false
+    queryAttributePrefix: http.querystring
+    decode: true
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Test REST API Method
+- type: CompareAttributeFilter
+  fields:
+    name: Test REST API Method
+  routing:
+    success: ../HTTP Basic
+    failure: ../Test REST API Method GET
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.request.path}
+      matchType: BEGINS_WITH
+      expression: /badguys/product/
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.request.verb}
+      matchType: IS
+      expression: POST
+- type: HttpBasicFilter
+  fields:
+    credentialFormat: Username
+    removeAuthNHeader: false
+    repository: /External Connections/Authentication Repositories/KPS Repositories/Heroes
+    name: HTTP Basic
+  routing:
+    success: ../Copy / Modify Attributes
+  logging:
+    fatal: 'Error occurred while authenticating via HTTP Basic. Error: ${circuit.exception}'
+    failure: HTTP basic authentication failed
+    success: HTTP basic authentication success for ${authentication.subject.id}
+- type: CopyAttributeFilter
+  fields:
+    name: Copy / Modify Attributes
+  routing:
+    success: '../Extract Path Parameter: product'
+  logging:
+    fatal: 'Error occurred while copying attributes. Error: ${circuit.exception}'
+    failure: Failed to copy attributes
+    success: Copied attributes successfully
+  children:
+  - type: CopyAttribute
+    fields:
+      fromAttributeName: ""
+      toAttributeName: shoponline
+      attributeValue: ${kps.heroes[authentication.subject.id].shoponline}
+      fromAttributeLocation: 3
+      toAttributeLocation: 2
+  - type: CopyAttribute
+    fields:
+      fromAttributeName: ""
+      toAttributeName: faction
+      attributeValue: ${kps.heroes[authentication.subject.id].faction}
+      fromAttributeLocation: 3
+      toAttributeLocation: 2
+- type: PathParameterFilter
+  fields:
+    uriTemplate: /badguys/product/{product}
+    name: 'Extract Path Parameter: product'
+  routing:
+    success: ../Set 'OrderProduct' Message
+  children:
+  - type: OutputPropertyDefinition
+    fields:
+      selector: depot.product
+      name: product
+      type: java.lang.String
+- type: ChangeMessageFilter
+  fields:
+    outputContentType: application/xml+soap
+    name: Set 'OrderProduct' Message
+    body: '{{file "REST to SOAP Transform-Files/Set ''OrderProduct'' Message.xml"}}'
+  routing:
+    success: ../Insert SAML Authentication Assertion
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: SamlAuthNInsertFilter
+  fields:
+    lifeTime: 86400
+    driftTime: 1
+    samlVersion: 20
+    issuerName: Samples Test CA
+    addAttributeStatement: true
+    subjectConfirmationCertAttribute: ""
+    symmetricKeyAttribute: ""
+    symmetricKeyEncryptionCertAttribute: ""
+    messageAttribute: ""
+    name: Insert SAML Authentication Assertion
+  routing:
+    success: ../Call 'Parse SOAP Operation'
+  logging:
+    fatal: 'Error during SAML authentication assertion insertion. Error: ${circuit.exception}'
+    failure: Failed to insert SAML authentication assertion
+    success: Inserted SAML authentication assertion
+  children:
+  - type: KeyInfoFormat
+    fields:
+      keyNameValue: ""
+      keyNameType: []
+      certAttachmentId: ""
+      sctType: []
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/QuickStart/Virtualized Services/SOAP/Parse SOAP Operation
+    name: Call 'Parse SOAP Operation'
+  routing:
+    success: ../Retrieve XML Body from message
+    failure: ../Retrieve SOAP Fault from message
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: AttributeExtractXPathFilter
+  fields:
+    attributeLocation: /Resources/XPath Definitions/Attribute Locations/SOAP Body
+    attributeName: soap.body
+    xpathInterpretation: 2
+    name: Retrieve XML Body from message
+  routing:
+    success: ../Set XML Body
+  logging:
+    fatal: 'Error occurred while extracting attributes via XPath. Error: ${circuit.exception}'
+    failure: Failed to extract attributes via XPath
+    success: Extracted attribute from message via XPath
+- type: ChangeMessageFilter
+  fields:
+    body: ${soap.body}
+    outputContentType: text/xml
+    name: Set XML Body
+  routing:
+    success: ../XML To JSON
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: XMLToJSONFilter
+  fields:
+    autoPrimitive: false
+    namespaces: true
+    name: XML To JSON
+  routing:
+    success: ../Add HTTP Header
+- type: AddHTTPHeaderFilter
+  fields:
+    headerName: Content-Type
+    headerValue: application/json; charset=UTF-8
+    name: Add HTTP Header
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in adding the HTTP header to the message. Error: ${circuit.exception}'
+    failure: Failed in adding the HTTP header to the message
+    success: Success in adding the HTTP header to the message
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: AttributeExtractXPathFilter
+  fields:
+    attributeLocation: /Resources/XPath Definitions/Attribute Locations/Test SOAP Fault
+    attributeName: soap.fault
+    name: Retrieve SOAP Fault from message
+  routing:
+    success: ../Set Error Message
+  logging:
+    fatal: 'Error occurred while extracting attributes via XPath. Error: ${circuit.exception}'
+    failure: Failed to extract attributes via XPath
+    success: Extracted attribute from message via XPath
+- type: ChangeMessageFilter
+  fields:
+    body: '{"error":"${soap.fault}"}'
+    outputContentType: application/json
+    name: Set Error Message
+  routing:
+    success: ../Reflect Error Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 403
+    name: Reflect Error Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: CompareAttributeFilter
+  fields:
+    name: Test REST API Method GET
+  routing:
+    success: ../Set 'GetProducts' Message
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.request.verb}
+      matchType: IS
+      expression: GET
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.request.path}
+      matchType: IS
+      expression: /badguys/products
+- type: ChangeMessageFilter
+  fields:
+    outputContentType: application/xml+soap
+    name: Set 'GetProducts' Message
+    body: '{{file "REST to SOAP Transform-Files/Set ''GetProducts'' Message.xml"}}'
+  routing:
+    success: ../Call 'Parse SOAP Operation'
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message

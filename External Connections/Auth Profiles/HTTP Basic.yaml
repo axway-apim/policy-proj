@@ -1,0 +1,20 @@
+---
+type: BasicAuthGroup
+fields:
+  name: HTTP Basic
+children:
+- type: BasicProfile
+  fields:
+    httpAuthUser: admin
+    httpAuthPass: MTFmNTU0OTZmZDA0MWI0MTdmNGVjZWQzMTQyM2NkYWUzNQ==
+    name: jenkins
+- type: BasicProfile
+  fields:
+    httpAuthUser: regadmin
+    httpAuthPass: Y2hhbmdlbWU=
+    name: Get Application Image
+- type: BasicProfile
+  fields:
+    httpAuthUser: apiadmin
+    httpAuthPass: QXh3YXlBUElNIQ==
+    name: apiadmin

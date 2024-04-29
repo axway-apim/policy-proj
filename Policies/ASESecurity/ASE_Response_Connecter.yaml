@@ -1,0 +1,62 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Set Headers
+  fault: ./True Filter Fault
+  name: ASE_Response_Connecter
+  description: ""
+children:
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Set Headers
+    script: '{{file "ASE_Response_Connecter-Files/Set Headers.groovy"}}'
+  routing:
+    success: ../Connect to ASE Response
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: ConnectToURLFilter
+  fields:
+    url: '{{ASESecurity.ASE_Response_Connecter.Connect_to_ASE_Response.url}}'
+    method: POST
+    protoHeaders: ${newHeader}
+    caCerts: []
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv3
+    - notlsv1
+    - nosslv2
+    - notlsv1_1
+    slaBreachAsFailure: true
+    connectionFailurePolicy: '/Policies/Policy Library/Return HTTP Error 401: Unauthorized'
+    name: Connect to ASE Response
+  routing:
+    success: ../Return True
+    failure: ../Return True
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: TrueFilter
+  fields:
+    name: Return True
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: TrueFilter
+  fields:
+    name: True Filter Fault
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed

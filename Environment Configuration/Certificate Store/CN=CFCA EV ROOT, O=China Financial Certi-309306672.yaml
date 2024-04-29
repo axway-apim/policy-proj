@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=CFCA EV ROOT, O=China Financial Certification Authority, C=CN
+  content: '{{file "CN=CFCA EV ROOT, O=China Financial Certi-309306672-cert.pem"}}'

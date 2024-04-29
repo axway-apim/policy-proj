@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=SZAFIR ROOT CA2, O=Krajowa Izba Rozliczeniowa S.A., C=PL
+  content: '{{file "CN=SZAFIR ROOT CA2, O=Krajowa Izba Rozli-1317912208-cert.pem"}}'

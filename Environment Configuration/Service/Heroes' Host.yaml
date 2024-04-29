@@ -1,0 +1,15 @@
+---
+type: RemoteHost
+fields:
+  alias: Heroes' Host
+  name: heroes.org
+  maxConnections: 128
+  offerTlsServerName: false
+children:
+- type: AddressRank
+  fields:
+    rank: 0
+    addresses: localhost:${env.PORT.TRAFFIC}
+- type: RoundRobinLbCfg
+  fields:
+    name: d7d579c6-cbe2-4c98-9f88-cf5de12b9c84

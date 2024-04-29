@@ -1,0 +1,6 @@
+---
+type: ResourceBlob
+fields:
+  ID: KJF42QK55GN2GTD5ZKWK3I5M7JZQIU55
+  type: wsdl
+  content: '{{file "KJF42QK55GN2GTD5ZKWK3I5M7JZQIU55.wsdl" "binary"}}'

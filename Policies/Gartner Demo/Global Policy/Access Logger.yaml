@@ -1,0 +1,16 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Trace Filter
+  name: Access Logger
+  description: ""
+children:
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceLevel: 0
+    name: Trace Filter
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties

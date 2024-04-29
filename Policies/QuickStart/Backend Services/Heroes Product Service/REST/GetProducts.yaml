@@ -1,0 +1,64 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract REST Request Attributes
+  name: GetProducts
+  description: ""
+children:
+- type: ExtractRESTAttributesFilter
+  fields:
+    useQueryString: false
+    queryAttributePrefix: http.querystring
+    decode: true
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Compare Attribute
+- type: CompareAttributeFilter
+  fields:
+    name: Compare Attribute
+  routing:
+    success: ../Set Message
+    failure: ../Method Error
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.path[3]}
+      matchType: IS
+      expression: GetProducts
+- type: ChangeMessageFilter
+  fields:
+    outputContentType: application/json
+    name: Set Message
+    body: '{{file "GetProducts-Files/Set Message.json"}}'
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: ChangeMessageFilter
+  fields:
+    body: '{"error":"Invalid request"}'
+    outputContentType: application/json
+    name: Method Error
+  routing:
+    success: ../Reflect 400 Bad Request
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 400
+    name: Reflect 400 Bad Request
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

@@ -1,0 +1,129 @@
+---
+type: XPathAttributeLocationGroup
+fields:
+  name: Attribute Locations
+children:
+- type: XPath
+  fields:
+    name: The Soap Operation Name
+    xpath: local-name(/soap12:Envelope/soap12:Body/*)
+  children:
+  - type: XPathNamespace
+    fields:
+      prefix: soap
+      URI: http://schemas.xmlsoap.org/soap/envelope/
+  - type: XPathNamespace
+    fields:
+      prefix: soap12
+      URI: http://www.w3.org/2003/05/soap-envelope
+  - type: XPathNamespace
+    fields:
+      prefix: ns
+      URI: http://quickstart.samples/xsd
+  - type: XPathNamespace
+    fields:
+      prefix: wsu
+      URI: http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd
+  - type: XPathNamespace
+    fields:
+      prefix: wsse
+      URI: http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd
+  - type: XPathNamespace
+    fields:
+      prefix: dsig
+      URI: http://www.w3.org/2000/09/xmldsig#
+- type: XPath
+  fields:
+    name: The WS-Addressing MessageID
+    xpath: //wsa:MessageID
+  children:
+  - type: XPathNamespace
+    fields:
+      prefix: wsa
+      URI: http://schemas.xmlsoap.org/ws/2004/08/addressing
+- type: XPath
+  fields:
+    name: Price
+    xpath: /soap:Envelope/soap:Body/m:GetStockPriceResponse/m:Price/text()
+  children:
+  - type: XPathNamespace
+    fields:
+      prefix: soap
+      URI: http://schemas.xmlsoap.org/soap/envelope/
+  - type: XPathNamespace
+    fields:
+      prefix: m
+      URI: http://www.example.org/stock
+- type: XPath
+  fields:
+    name: SOAP Body
+    xpath: /soap:Envelope/soap:Body/*
+  children:
+  - type: XPathNamespace
+    fields:
+      prefix: soap
+      URI: http://www.w3.org/2003/05/soap-envelope
+- type: XPath
+  fields:
+    name: OrderProduct
+    xpath: /soap:Envelope/soap:Body/OrderProduct/text()
+  children:
+  - type: XPathNamespace
+    fields:
+      prefix: soap
+      URI: http://www.w3.org/2003/05/soap-envelope
+- type: XPath
+  fields:
+    name: symbol
+    xpath: //ns:symbol/text()
+  children:
+  - type: XPathNamespace
+    fields:
+      prefix: wsu
+      URI: http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd
+  - type: XPathNamespace
+    fields:
+      prefix: dsig
+      URI: http://www.w3.org/2000/09/xmldsig#
+  - type: XPathNamespace
+    fields:
+      prefix: ns
+      URI: http://quickstart.samples/xsd
+  - type: XPathNamespace
+    fields:
+      prefix: soap12
+      URI: http://www.w3.org/2003/05/soap-envelope
+  - type: XPathNamespace
+    fields:
+      prefix: wsse
+      URI: http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd
+- type: XPath
+  fields:
+    name: SymbolValue
+    xpath: /soap12:Envelope/soap12:Body/ns:getPrice/ns:symbol
+  children:
+  - type: XPathNamespace
+    fields:
+      prefix: soap12
+      URI: http://www.w3.org/2003/05/soap-envelope
+  - type: XPathNamespace
+    fields:
+      prefix: ns
+      URI: http://quickstart.samples/xsd
+  - type: XPathNamespace
+    fields:
+      prefix: wsu
+      URI: http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd
+- type: XPath
+  fields:
+    name: Test SOAP Fault
+    xpath: /env:Envelope/env:Body/env:Fault/env:Reason/env:Text
+  children:
+  - type: XPathNamespace
+    fields:
+      prefix: env
+      URI: http://www.w3.org/2003/05/soap-envelope
+  - type: XPathNamespace
+    fields:
+      prefix: fault
+      URI: http://tempuri.org/soapfaults

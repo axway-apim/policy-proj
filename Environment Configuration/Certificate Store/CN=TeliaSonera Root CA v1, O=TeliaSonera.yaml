@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=TeliaSonera Root CA v1, O=TeliaSonera
+  content: '{{file "CN=TeliaSonera Root CA v1, O=TeliaSonera-cert.pem"}}'

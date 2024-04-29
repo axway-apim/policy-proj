@@ -1,0 +1,48 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Set HTTP Verb to POST
+  name: Convert SOAP to JSON
+  description: ""
+children:
+- type: SetHTTPVerbFilter
+  fields:
+    httpVerb: POST
+    name: Set HTTP Verb to POST
+  routing:
+    success: ../Set SOAPAction to http://www.axway.com/RetrieveAccount
+  logging:
+    fatal: 'Error in setting the HTTP verb for the message. Error: ${circuit.exception}'
+    failure: Failed in setting the HTTP verb for the message
+    success: Success in setting the HTTP verb for the message
+- type: AddHTTPHeaderFilter
+  fields:
+    headerName: SOAPAction
+    headerValue: http://www.axway.com/RetrieveAccount
+    name: Set SOAPAction to http://www.axway.com/RetrieveAccount
+  routing:
+    success: ../Trace Filter
+  logging:
+    fatal: 'Error in adding the HTTP header to the message. Error: ${circuit.exception}'
+    failure: Failed in adding the HTTP header to the message
+    success: Success in adding the HTTP header to the message
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceBody: true
+    doIndent: true
+    name: Trace Filter
+  routing:
+    success: ../Call service handler policy generated from WSDL Import 'BankAccount'
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Generated Policies/Web Services.Forrester Demo.BankAccount/BankAccount
+    name: Call service handler policy generated from WSDL Import 'BankAccount'
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut

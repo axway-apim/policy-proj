@@ -1,0 +1,169 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract REST Request Attributes
+  name: APIManager JWT Validation
+  description: ""
+children:
+- type: ExtractRESTAttributesFilter
+  fields:
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Store Original Message
+- type: StoreContentBodyToAttributeFilter
+  fields:
+    name: Store Original Message
+  routing:
+    success: ../Is there OAuth Access Token?
+  logging:
+    fatal: 'Error in storing the message. Error: ${circuit.exception}'
+    failure: Failed to store the message in attribute
+    success: 'Success in storing the message to attribute '
+- type: CompareAttributeFilter
+  fields:
+    name: Is there OAuth Access Token?
+  routing:
+    success: ../Extract Access Token From Header
+    failure: ../Set Message Access Token Not Found
+  logging:
+    maskType: FILTER
+    mask: 1
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.header.Authorization}
+      matchType: IS_NOT
+      expression: "null"
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.header.Authorization}
+      matchType: BEGINS_WITH
+      expression: 'Bearer '
+- type: StringReplaceFilter
+  fields:
+    sourceAttribute: http.header.Authorization
+    destAttribute: var.axway.jwt.accesstoken
+    destAttributeOverride: true
+    straightMatchString: 'Bearer '
+    name: Extract Access Token From Header
+  routing:
+    success: ../Set Access Token Variable
+- type: ChangeMessageFilter
+  fields:
+    body: access_token=${var.axway.jwt.accesstoken}
+    outputContentType: application/x-www-form-urlencoded
+    name: Set Access Token Variable
+  routing:
+    success: ../Connect to Token Info
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: ConnectToURLFilter
+  fields:
+    url: https://maverick.demo.axway.com:8089/api/oauth/tokeninfo
+    method: POST
+    caCerts: []
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Connect to Token Info
+  routing:
+    success: ../Is HTTP Status 200?
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: CompareAttributeFilter
+  fields:
+    name: Is HTTP Status 200?
+  routing:
+    success: ../Restore Message
+    failure: ../Set Message Invalid/Expired Token
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.response.status}
+      matchType: IS
+      expression: 200
+- type: RestoreContentBodyFromAttributeFilter
+  fields:
+    name: Restore Message
+  routing:
+    success: ../Valid Token
+  logging:
+    fatal: 'Error in restoring the message. Error: ${circuit.exception}'
+    failure: Failed to restore the message
+    success: Success in restoring the message
+- type: TrueFilter
+  fields:
+    name: Valid Token
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: ChangeMessageFilter
+  fields:
+    body: ${content.body}
+    outputContentType: application/json
+    name: Set Message Invalid/Expired Token
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 401
+    name: Reflect Message
+  routing:
+    success: ../False Filter
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: FalseFilter
+  fields:
+    name: False Filter
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""
+- type: ChangeMessageFilter
+  fields:
+    outputContentType: application/json
+    name: Set Message Access Token Not Found
+    body: '{{file "APIManager JWT Validation-Files/Set Message Access Token Not Found.json"}}'
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Axway JWT Access Token Policies/API Manager JWT Validation/Review Allowed Operations
+    name: Call 'Review Allowed Operations'
+  routing:
+    success: ../Restore Message
+    failure: ../False Filter
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Axway JWT Access Token Policies/API Manager JWT Validation/Check API x Application Access
+    name: Call 'Check API x Application Access'
+  routing:
+    success: ../Call 'Review Allowed Operations'
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut

@@ -1,0 +1,40 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract JWT Token from Content
+  name: Review Allowed Operations
+  description: ""
+children:
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: axway.json.jwt.token
+    attributeValue: ${content.body}
+    name: Extract JWT Token from Content
+  routing:
+    success: ../Validate Allowed Operations
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: JavaScriptFilter
+  fields:
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Validate Allowed Operations
+    script: '{{file "Review Allowed Operations-Files/Validate Allowed Operations.nashorn.js"}}'
+  routing:
+    success: ../Trace Filter
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: 'Failed script filter: ${axway.validation.error}'
+    success: Passed script filter
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceBody: true
+    name: Trace Filter
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties

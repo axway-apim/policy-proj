@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: OU=Trustis FPS Root CA, O=Trustis Limited, C=GB
+  content: '{{file "OU=Trustis FPS Root CA, O=Trustis Limite-979089715-cert.pem"}}'

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+ <soap:Envelope
+ xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+
+ <soap:Body xmlns:m="http://www.example.org/stock">
+   <m:GetStockPriceResponse>
+     <m:Price>${stockquote.price}</m:Price>
+   </m:GetStockPriceResponse>
+</soap:Body>
+
+ </soap:Envelope>

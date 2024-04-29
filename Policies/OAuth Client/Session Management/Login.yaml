@@ -1,0 +1,122 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Login via HTML Form
+  name: Login
+children:
+- type: FormAuthnFilter
+  fields:
+    credentialFormat: Username
+    repository: /External Connections/Authentication Repositories/Local Repositories/Local User Store
+    uriprefix: /client
+    domain: ""
+    onlySendOverSSL: true
+    httpOnly: true
+    cookie: CLIENTCOOKIE
+    name: Login via HTML Form
+  routing:
+    success: ../Retrieve from user store
+    failure: ../Cache Control Header
+- type: VordelAttributeExtractFilter
+  fields:
+    name: Retrieve from user store
+  routing:
+    success: ../Set Message
+  logging:
+    fatal: 'Error occurred during when looking up of local user attributes. Error: ${circuit.exception}'
+    failure: Failed to look up local user attributes
+    success: Successfully looked up local user attributes for the user ${authentication.subject.id}
+  children:
+  - type: LookupAttribute
+    fields:
+      name: locale
+  - type: LookupAttribute
+    fields:
+      name: hd
+  - type: LookupAttribute
+    fields:
+      name: family_name
+  - type: LookupAttribute
+    fields:
+      name: email_verified
+  - type: LookupAttribute
+    fields:
+      name: picture
+  - type: LookupAttribute
+    fields:
+      name: email
+  - type: LookupAttribute
+    fields:
+      name: given_name
+  - type: LookupAttribute
+    fields:
+      name: gender
+- type: ChangeMessageFilter
+  fields:
+    outputContentType: application/json
+    name: Set Message
+    body: '{{file "Login-Files/Set Message.json"}}'
+  routing:
+    success: ../Store User in demo User store (cache)
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: CacheAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/HTTP Sessions
+    keyAttributeName: authentication.subject.id
+    name: Store User in demo User store (cache)
+  routing:
+    success: ../Redirect to Client app
+  logging:
+    fatal: 'Error while caching the message attribute. Error: ${circuit.exception}'
+    failure: Failed to cache the message attribute.
+    success: Cached the message attribute.
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /client/
+    outputContentType: text/html
+    content: redirect
+    name: Redirect to Client app
+- type: AddHTTPHeaderFilter
+  fields:
+    headerName: Cache-Control
+    headerValue: no-cache, no-store, must-revalidate
+    name: Cache Control Header
+  routing:
+    success: ../Expires Header
+  logging:
+    fatal: 'Error in adding the HTTP header to the message. Error: ${circuit.exception}'
+    failure: Failed in adding the HTTP header to the message
+    success: Success in adding the HTTP header to the message
+- type: AddHTTPHeaderFilter
+  fields:
+    headerName: Expires
+    headerValue: 0
+    name: Expires Header
+  routing:
+    success: ../Pragma Header
+  logging:
+    fatal: 'Error in adding the HTTP header to the message. Error: ${circuit.exception}'
+    failure: Failed in adding the HTTP header to the message
+    success: Success in adding the HTTP header to the message
+- type: AddHTTPHeaderFilter
+  fields:
+    headerName: Pragma
+    headerValue: no-cache
+    name: Pragma Header
+  routing:
+    success: ../Redirect to login
+  logging:
+    fatal: 'Error in adding the HTTP header to the message. Error: ${circuit.exception}'
+    failure: Failed in adding the HTTP header to the message
+    success: Success in adding the HTTP header to the message
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /login/
+    outputContentType: text/html
+    content: fail
+    name: Redirect to login

@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=SecureTrust CA, O=SecureTrust Corporation, C=US
+  content: '{{file "CN=SecureTrust CA, O=SecureTrust Corpora-841000508-cert.pem"}}'

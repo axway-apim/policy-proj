@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Hellenic Academic and Research Institutions RootCA 2011, O=Hellenic Academic and Research Institutions Cert. Authority, C=GR
+  content: '{{file "CN=Hellenic Academic and Research Instit-877759112-cert.pem"}}'

@@ -1,0 +1,156 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract REST Request Attributes
+  name: Security Main
+  description: Main security policy
+  category: /System/Policy Categories/security
+children:
+- type: ExtractRESTAttributesFilter
+  fields:
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Set Failed message
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.body
+    attributeValue: '{"Error": "API Gateway caught an exception"}'
+    name: Set Failed message
+  routing:
+    success: ../Set Failed http code
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.http.code
+    attributeValue: 500
+    name: Set Failed http code
+  routing:
+    success: ../Trace Filter
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    name: Trace Filter
+  routing:
+    success: ../Call IP whitelisting
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/AVN Sample Policies/IP Whitelisting
+    name: Call IP whitelisting
+  routing:
+    success: ../Is HTTP Method GET | POST | PUT | DELETE | OPTIONS?
+    failure: ../Abort
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: SelectorFilter
+  fields:
+    expression: ${http.request.verb.equalsIgnoreCase("get") || http.request.verb.equalsIgnoreCase("delete") || http.request.verb.equalsIgnoreCase("options") || http.request.verb.equalsIgnoreCase("put") || http.request.verb.equalsIgnoreCase("post")}
+    name: Is HTTP Method GET | POST | PUT | DELETE | OPTIONS?
+  routing:
+    success: ../Validate Payload
+    failure: ../Unallowed HTTP Method
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/AVN Sample Policies/Payload Validation
+    name: Validate Payload
+  routing:
+    success: ../Quota exceeded?
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: MaximumNumberMsgsFilter
+  fields:
+    insertRateLimitingHeaders: true
+    xRateLimitResponseHeaderStem: x
+    algorithm: FTW
+    numberMessages: 100
+    timePeriod: 30
+    name: Quota exceeded?
+  routing:
+    success: ../Proceed
+    failure: ../Abort
+  logging:
+    fatal: 'Throttle filter aborted: ${circuit.exception}'
+    failure: Maximum number of messages filter was triggered
+    success: Maximum number of messages filter was not triggered
+- type: TrueFilter
+  fields:
+    name: Proceed
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: ExceptionFilter
+  fields:
+    name: Abort
+  logging:
+    fatal: 'Error in calling exception filter. Error: ${circuit.exception}'
+    failure: Failure in exception filter
+    success: Success in exception filter
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: circuit.failure.reason
+    attributeValue: HTTP Method ${http.request.verb} not allowed
+    name: Unallowed HTTP Method
+  routing:
+    success: ../Abort
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: IpFilter
+  fields:
+    name: Check If IP is Whitelisted
+  logging:
+    fatal: 'Error occurred during IP-address filtering. Error: ${circuit.exception}'
+    failure: IP-address filtering failed for ${http.request.clientaddr}
+    success: IP-address filtering passed for ${http.request.clientaddr}
+  children:
+  - type: IpNetMask
+    fields:
+      address: 20.110.193.44
+      netmask: 255.255.0.0
+  - type: IpNetMask
+    fields:
+      address: 73.181.68.190
+      netmask: 255.255.0.0
+  - type: IpNetMask
+    fields:
+      address: 208.127.245.152
+      netmask: 255.255.0.0
+  - type: IpNetMask
+    fields:
+      address: 165.1.213.211
+      netmask: 255.255.0.0
+  - type: IpNetMask
+    fields:
+      address: 208.127.247.70
+      netmask: 255.255.0.0
+  - type: IpNetMask
+    fields:
+      address: 52.159.100.179
+      netmask: 255.255.0.0
+  - type: IpNetMask
+    fields:
+      address: 208.67.129.13
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Security/Security Alert
+    name: Call 'Security Alert'
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut

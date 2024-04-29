@@ -1,0 +1,182 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call 'Is Logged In'
+  name: Google Authorize Callback
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/OAuth Client/Session Management/Is Logged In
+    name: Call 'Is Logged In'
+  routing:
+    success: ../Exchange Authorization Code for Token
+    failure: ../Exchange Authorization Code for Token and ID Token
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: GetOAuthClientTokenFilter
+  fields:
+    profile: /External Connections/Auth Profiles/OAuth2/Google/Google App
+    name: Exchange Authorization Code for Token
+  routing:
+    success: ../Redirect to Client app homepage
+  children:
+  - type: ConnectionFilter
+    fields:
+      caCerts: []
+      ciphers: DEFAULT
+      ssloptions:
+      - nosslv2
+      - nosslv3
+      - notlsv1
+      - notlsv1_1
+      name: Connection Details
+    children:
+    - type: SaveToFileFilter
+      fields:
+        name: Persistence Details
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: https://${env.OAUTH.CLIENT}:${env.PORT.OAUTH2.CLIENT}/client
+    outputContentType: text/html
+    content: redirect
+    name: Redirect to Client app homepage
+- type: GetOAuthClientTokenFilter
+  fields:
+    profile: /External Connections/Auth Profiles/OAuth2/Google/Google App
+    tokenKey: ""
+    name: Exchange Authorization Code for Token and ID Token
+  routing:
+    success: ../Get Google JSON Key Set for Verification
+  children:
+  - type: ConnectionFilter
+    fields:
+      caCerts: []
+      ciphers: DEFAULT
+      ssloptions:
+      - nosslv2
+      - nosslv3
+      - notlsv1
+      - notlsv1_1
+      name: Connection Details
+    children:
+    - type: SaveToFileFilter
+      fields:
+        name: Persistence Details
+- type: ConnectToURLFilter
+  fields:
+    url: https://www.googleapis.com/oauth2/v2/certs
+    method: GET
+    caCerts: []
+    ciphers: DEFAULT
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Get Google JSON Key Set for Verification
+  routing:
+    success: ../Verify ID Token
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: VerifyIDTokenFilter
+  fields:
+    issuer: accounts.google.com
+    jwtVerifier: /Environment Configuration/Certificate Store/CN=Change this for production
+    clockSkew: 120
+    name: Verify ID Token
+  routing:
+    success: ../Set authenticated subject id
+    failure: ../Delete an OAuth Access Token
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: authentication.subject.id
+    attributeValue: ${openid.idtoken.sub}
+    name: Set authenticated subject id
+  routing:
+    success: ../Save the OAuth Token
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SaveOAuthTokenFilter
+  fields:
+    name: Save the OAuth Token
+  routing:
+    success: ../Get User Info from local User store
+- type: IsCachedAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/HTTP Sessions
+    keyAttributeName: authentication.subject.id
+    name: Get User Info from local User store
+  routing:
+    success: ../Create new authenticated session
+    failure: ../Get Info from Google UserInfo Service
+  logging:
+    fatal: 'Error while looking for key in the  message attribiute cache. Error: ${circuit.exception}'
+    failure: Failure while looking for key in the message attribute cache.
+    success: Found the key in the message attribute cache.
+- type: CreateSessionFilter
+  fields:
+    onlySendOverSSL: true
+    httpOnly: true
+    uriprefix: /client
+    domain: ""
+    cookie: CLIENTCOOKIE
+    name: Create new authenticated session
+  routing:
+    success: ../Redirect to Client app homepage
+- type: ConnectToURLFilter
+  fields:
+    url: https://www.googleapis.com/plus/v1/people/me/openIdConnect
+    profile: /External Connections/Auth Profiles/OAuth2/Google/Google App
+    caCerts: []
+    ciphers: DEFAULT
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Get Info from Google UserInfo Service
+  routing:
+    success: ../Update local User store
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: CacheAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/HTTP Sessions
+    keyAttributeName: authentication.subject.id
+    name: Update local User store
+  routing:
+    success: ../Create new authenticated session
+  logging:
+    fatal: 'Error while caching the message attribute. Error: ${circuit.exception}'
+    failure: Failed to cache the message attribute.
+    success: Cached the message attribute.
+- type: DeleteOAuthTokenFilter
+  fields:
+    name: Delete an OAuth Access Token
+  routing:
+    success: ../Redirect to Login Page
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /client/logout/
+    outputContentType: text/html
+    content: verification of the id token failed
+    name: Redirect to Login Page

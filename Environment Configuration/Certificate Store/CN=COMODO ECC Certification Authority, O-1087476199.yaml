@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=COMODO ECC Certification Authority, O=COMODO CA Limited, L=Salford, ST=Greater Manchester, C=GB
+  content: '{{file "CN=COMODO ECC Certification Authority, O-1087476199-cert.pem"}}'

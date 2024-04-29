@@ -1,0 +1,6 @@
+---
+type: Script
+fields:
+  name: Trace
+  description: Output trace statements
+  script: '{{file "Trace.js"}}'

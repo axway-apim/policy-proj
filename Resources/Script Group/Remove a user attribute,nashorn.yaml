@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Remove a user attribute
+  description: Removes a user attribute called "role"
+  engineName: nashorn
+  script: '{{file "Remove a user attribute.nashorn.js"}}'

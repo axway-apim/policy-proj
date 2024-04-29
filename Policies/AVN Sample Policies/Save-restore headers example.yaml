@@ -1,0 +1,58 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract REST Request Attributes
+  name: Save-restore headers example
+  description: ""
+children:
+- type: ExtractRESTAttributesFilter
+  fields:
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Scripting save headers and body
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Scripting save headers and body
+    script: '{{file "Save-restore headers example-Files/Scripting save headers and body.groovy"}}'
+  routing:
+    success: ../Connect to URL
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: ConnectToURLFilter
+  fields:
+    url: https://example.com/api-path
+    caCerts: []
+    ssloptions:
+    - nosslv3
+    - notlsv1
+    - noSslRenegotiation
+    - notlsv1_1
+    name: Connect to URL
+  routing:
+    success: ../Scripting restore headers and body
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Scripting restore headers and body
+    script: '{{file "Save-restore headers example-Files/Scripting restore headers and body.groovy"}}'
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter

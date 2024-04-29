@@ -1,0 +1,17 @@
+---
+type: KPSType
+fields:
+  name: ipwlsvc
+children:
+- type: KPSTypeProperty
+  fields:
+    name: IpRange
+    type: java.lang.String
+    key: ""
+    value: ""
+- type: KPSTypeProperty
+  fields:
+    name: ServiceId
+    type: java.lang.String
+    key: ""
+    value: ""

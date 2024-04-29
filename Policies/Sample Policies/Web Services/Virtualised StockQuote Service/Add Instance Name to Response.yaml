@@ -1,0 +1,21 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Add Instance Name to Response
+  name: Add Instance Name to Response
+  description: ""
+children:
+- type: InsertXMLNodeFilter
+  fields:
+    nodeName: ""
+    nodeNamespacePrefix: ""
+    nodeNamespace: ""
+    nodeLocation: /Resources/XPath Definitions/Add Node Locations/StockQuoteResponseNode
+    newNodeMessageAttribute: ""
+    actor: ""
+    name: Add Instance Name to Response
+    nodeContent: '{{file "Add Instance Name to Response-Files/Add Instance Name to Response.xml"}}'
+  logging:
+    fatal: 'Error inserting XML mode into the message. Error: ${circuit.exception}'
+    failure: Failed to insert XML node into the message
+    success: Successfully inserted XML node into message

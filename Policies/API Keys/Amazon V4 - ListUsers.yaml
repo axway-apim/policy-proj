@@ -1,0 +1,46 @@
+---
+type: FilterCircuit
+fields:
+  start: ./HTTP Basic
+  name: Amazon V4 - ListUsers
+  description: ""
+children:
+- type: HttpBasicFilter
+  fields:
+    credentialFormat: Username
+    removeAuthNHeader: true
+    repository: /External Connections/Authentication Repositories/Local Repositories/Local User Store
+    name: HTTP Basic
+  routing:
+    success: ../Connect to URL
+  logging:
+    fatal: 'Error occurred while authenticating via HTTP Basic. Error: ${circuit.exception}'
+    failure: HTTP basic authentication failed
+    success: HTTP basic authentication success for ${authentication.subject.id}
+- type: ConnectToURLFilter
+  fields:
+    url: https://iam.amazonaws.com/
+    profile: /External Connections/Auth Profiles/API Keys/Amazon AWS V4 Signing/QA Amazon Account V4
+    caCerts: []
+    ciphers: DEFAULT
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    handleRedirects: false
+    name: Connect to URL
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: XMLToJSONFilter
+  fields:
+    autoPrimitive: false
+    namespaces: true
+    xpathNode: /null
+    name: XML To JSON

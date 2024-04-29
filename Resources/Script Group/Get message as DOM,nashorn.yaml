@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Get message as DOM
+  description: Loads the message into a DOM
+  engineName: nashorn
+  script: '{{file "Get message as DOM.nashorn.js"}}'

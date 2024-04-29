@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=GeoTrust Universal CA, O=GeoTrust Inc., C=US
+  content: '{{file "CN=GeoTrust Universal CA, O=GeoTrust Inc-49780967-cert.pem"}}'

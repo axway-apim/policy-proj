@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=COMODO RSA Certification Authority, O=COMODO CA Limited, L=Salford, ST=Greater Manchester, C=GB
+  content: '{{file "CN=COMODO RSA Certification Authority, O-1667216884-cert.pem"}}'

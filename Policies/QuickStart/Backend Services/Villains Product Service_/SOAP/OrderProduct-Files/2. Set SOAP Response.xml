@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+<soap:Body>
+  <Order id="1" productId="${order.product}" quantity="1" />
+</soap:Body>
+</soap:Envelope>

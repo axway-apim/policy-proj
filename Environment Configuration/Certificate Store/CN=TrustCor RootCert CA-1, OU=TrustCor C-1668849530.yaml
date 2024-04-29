@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=TrustCor RootCert CA-1, OU=TrustCor Certificate Authority, O=TrustCor Systems S. de R.L., L=Panama City, ST=Panama, C=PA
+  content: '{{file "CN=TrustCor RootCert CA-1, OU=TrustCor C-1668849530-cert.pem"}}'

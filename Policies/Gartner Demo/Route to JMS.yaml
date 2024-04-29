@@ -1,0 +1,127 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Read Application
+  fault: ./JSON Error
+  name: Route to JMS
+  description: ""
+children:
+- type: PortalApplicationReadFilter
+  fields:
+    idSelector: ${authentication.subject.id}
+    name: Read Application
+  routing:
+    success: ../Extract REST Request Attributes
+- type: ExtractRESTAttributesFilter
+  fields:
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Set Attribute Filter
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: application.analyst
+    attributeValue: ${apimgmt.application.analyst}
+    name: Set Attribute Filter
+  routing:
+    success: ../Create SOAP <RetrieveAccountRequest> message
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: ChangeMessageFilter
+  fields:
+    outputContentType: text/xml
+    name: Create SOAP <RetrieveAccountRequest> message
+    body: '{{file "Route to JMS-Files/Create SOAP (lt)RetrieveAccountRequest(gt) message.xml"}}'
+  routing:
+    success: ../Trace Filter
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceLevel: 2
+    name: Trace Filter
+  routing:
+    success: ../Create Key
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: CreateMessageKeyFilter
+  fields:
+    uniqueAttributeName: application.analyst
+    name: Create Key
+  routing:
+    success: ../Is cached?
+  logging:
+    fatal: 'Error during message creation of message key from attribute. Error: ${circuit.exception}'
+    failure: Failure during creationo of message key from attribute.
+    success: Message key created from attribute.
+- type: IsCachedAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/ResponseCache
+    name: Is cached?
+  routing:
+    success: ../Reflect Message
+    failure: ../Send to JMS
+  logging:
+    fatal: 'Error while looking for key in the  message attribiute cache. Error: ${circuit.exception}'
+    failure: Failure while looking for key in the message attribute cache.
+    success: Found the key in the message attribute cache.
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: JMSFilter
+  fields:
+    connection: /External Connections/JMS Services/Embedded Apache ActiveMQ
+    requestDestination: ${apimgmt.application.analyst}
+    replyTo: ""
+    responseTimeoutMs: 5000
+    blockForResponse: true
+    responseType: 2
+    responseMessageSelector: ""
+    attributeName: ""
+    correlationId: ""
+    name: Send to JMS
+  routing:
+    success: ../Execute Data Map
+  logging:
+    fatal: 'Error while forwarding the message to  messaging system. Error: ${circuit.exception}'
+    failure: Failed to send the message to the messaging system
+    success: Successfully sent the message to the messaging system
+- type: TFXSLTMappingFilter
+  fields:
+    map: /System/TFXSLT Mapping Group/XML 2 JSON - BankAccount
+    name: Execute Data Map
+  routing:
+    success: ../Cache attribute
+  children:
+  - type: SourceDocument
+    fields:
+      ID: 8a6669a7-343e-4f22-b8ea-4059b0c1f3de
+      messageAttribute: content.body
+      schemaName: /home/axway/demo/data/api_library/BankAccountRetrieveAccount.xsd
+      order: 1
+- type: CacheAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/ResponseCache
+    name: Cache attribute
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error while caching the message attribute. Error: ${circuit.exception}'
+    failure: Failed to cache the message attribute.
+    success: Cached the message attribute.
+- type: JSONErrorFilter
+  fields:
+    showStack: true
+    showPath: true
+    showDetailedReason: true
+    name: JSON Error

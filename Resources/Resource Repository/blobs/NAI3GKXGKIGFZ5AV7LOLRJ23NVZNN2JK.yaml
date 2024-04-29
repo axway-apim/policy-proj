@@ -1,0 +1,6 @@
+---
+type: ResourceBlob
+fields:
+  ID: NAI3GKXGKIGFZ5AV7LOLRJ23NVZNN2JK
+  type: wsdl
+  content: '{{file "NAI3GKXGKIGFZ5AV7LOLRJ23NVZNN2JK.wsdl" "binary"}}'

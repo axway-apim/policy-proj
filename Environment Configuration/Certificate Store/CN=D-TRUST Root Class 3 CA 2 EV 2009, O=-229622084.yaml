@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=D-TRUST Root Class 3 CA 2 EV 2009, O=D-Trust GmbH, C=DE
+  content: '{{file "CN=D-TRUST Root Class 3 CA 2 EV 2009, O=-229622084-cert.pem"}}'

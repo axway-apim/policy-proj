@@ -1,0 +1,78 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Get User-Agent
+  name: Create Transaction-ID
+  description: ""
+children:
+- type: AttributeExtractHTTPHeaderFilter
+  fields:
+    headerName: user-agent
+    attributeName: user-agent
+    name: Get User-Agent
+  routing:
+    success: ../Get X-TransactionID
+    failure: ../Set User-Agent Unknown
+  logging:
+    fatal: 'Error occurred while extracting attributes from HTTP header. Error: ${circuit.exception}'
+    failure: Failed to extract attribute HTTP header
+    success: Extracted attribute from HTTP header
+- type: AttributeExtractHTTPHeaderFilter
+  fields:
+    headerName: X-TransactionID
+    attributeName: transactionId
+    name: Get X-TransactionID
+  routing:
+    failure: ../Create TransactionID
+  logging:
+    maskType: FILTER
+    mask: 6
+    fatal: 'Error occurred while extracting attributes from HTTP header. Error: ${circuit.exception}'
+    failure: Creating new Transaction-ID
+    success: Re-Use existing Transaction-ID
+- type: CreateMessageKeyFilter
+  fields:
+    uniqueAttributeName: id
+    outputAttributeName: transactionId
+    name: Create TransactionID
+  routing:
+    success: ../Add X-TransactionID HTTP Header
+  logging:
+    fatal: 'Error during message creation of message key from attribute. Error: ${circuit.exception}'
+    failure: Error creating transactionId
+    success: Message key created from attribute.
+- type: AddHTTPHeaderFilter
+  fields:
+    headerName: X-TransactionID
+    headerValue: ${transactionId}
+    name: Add X-TransactionID HTTP Header
+  routing:
+    success: ../Create random IP
+  logging:
+    fatal: 'Error in adding the HTTP header to the message. Error: ${circuit.exception}'
+    failure: Failed in adding the HTTP header to the message
+    success: Success in adding the HTTP header to the message
+- type: JavaScriptFilter
+  fields:
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Create random IP
+    script: '{{file "Create Transaction-ID-Files/Create random IP.nashorn.js"}}'
+  logging:
+    maskType: FILTER
+    mask: 6
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: 'Random IP: ${xForwardedFor}'
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: user-agent
+    attributeValue: Unknown
+    name: Set User-Agent Unknown
+  routing:
+    success: ../Get X-TransactionID
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value

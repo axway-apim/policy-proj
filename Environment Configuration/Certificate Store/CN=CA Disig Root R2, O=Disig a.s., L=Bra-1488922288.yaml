@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=CA Disig Root R2, O=Disig a.s., L=Bratislava, C=SK
+  content: '{{file "CN=CA Disig Root R2, O=Disig a.s., L=Bra-1488922288-cert.pem"}}'

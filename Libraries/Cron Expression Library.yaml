@@ -1,0 +1,89 @@
+---
+type: CronExpressionGroup
+fields:
+  name: Cron Expression Library
+children:
+- type: CronExpression
+  fields:
+    name: Run at 2:10pm and at 2:44pm every Wednesday in the month of March
+    expression: 0 10,44 14 ? 3 WED
+- type: CronExpression
+  fields:
+    name: Run at 12pm (noon) every day
+    expression: 0 0 12 * * ?
+- type: CronExpression
+  fields:
+    name: Run every other minute (at 15 seconds past the minute)
+    expression: 15 0/2 * * * ?
+- type: CronExpression
+  fields:
+    name: Run at 10:15am on the 15th day of every month
+    expression: 0 15 10 15 * ?
+- type: CronExpression
+  fields:
+    name: Run at 10:15am on every last Friday of every month during the years 2011, 2012, 2013, 2014, and 2015
+    expression: 0 15 10 ? * 6L 2011-2015
+- type: CronExpression
+  fields:
+    name: Run every other minute but only between 8am and 5pm
+    expression: 0 0/2 8-17 * * ?
+- type: CronExpression
+  fields:
+    name: Run every minute starting at 2pm and ending at 2:05pm, every day
+    expression: 0 0-5 14 * * ?
+- type: CronExpression
+  fields:
+    name: Run every 5 minutes starting at 2pm and ending at 2:55pm, AND fire every 5 minutes starting at 6pm and ending at 6:55pm, every day
+    expression: 0 0/5 14,18 * * ?
+- type: CronExpression
+  fields:
+    name: Run every 30 seconds but only on Weekends (Saturday and Sunday)
+    expression: 0,30 * * ? * SAT,SUN
+- type: CronExpression
+  fields:
+    name: Run at 10:15am every day
+    expression: 0 15 10 ? * *
+- type: CronExpression
+  fields:
+    name: Run at 10am on the 1st and 15th days of the month
+    expression: 0 0 10 1,15 * ?
+- type: CronExpression
+  fields:
+    name: Run every 30 seconds but only on Weekdays (Monday through Friday)
+    expression: 0,30 * * ? * MON-FRI
+- type: CronExpression
+  fields:
+    name: Run at 10:15am on the last day of every month
+    expression: 0 15 10 L * ?
+- type: CronExpression
+  fields:
+    name: Run every 5 minutes starting at 2pm and ending at 2:55pm, every day
+    expression: 0 0/5 14 * * ?
+- type: CronExpression
+  fields:
+    name: Run at 10:15am every day during the year 2011
+    expression: 0 15 10 * * ? 2011
+- type: CronExpression
+  fields:
+    name: Run at 10:15am every Monday, Tuesday, Wednesday, Thursday and Friday
+    expression: 0 15 10 ? * MON-FRI
+- type: CronExpression
+  fields:
+    name: Run at 10:15am on the third Friday of every month
+    expression: 0 15 10 ? * 6#3
+- type: CronExpression
+  fields:
+    name: Run every three minutes but only between 5pm and 11pm
+    expression: 0 0/3 17-23 * * ?
+- type: CronExpression
+  fields:
+    name: Run at 10:15am on the last Friday of every month
+    expression: 0 15 10 ? * 6L
+- type: CronExpression
+  fields:
+    name: Run every minute starting at 2pm and ending at 2:59pm, every day
+    expression: 0 * 14 * * ?
+- type: CronExpression
+  fields:
+    name: Run every 20 seconds
+    expression: 0/20 * * * * ?

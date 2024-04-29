@@ -1,0 +1,30 @@
+---
+type: OAuthProviderProfile
+fields:
+  name: Google
+  class: com.vordel.oauth.client.providers.OAuth2ProviderGoogle
+  authzUrl: https://accounts.google.com/o/oauth2/auth
+  tokenUrl: https://accounts.google.com/o/oauth2/token
+  tokenStore: /Libraries/OAuth2 Stores/Client Access Token Stores/OAuth Client Access Token Store
+children:
+- type: OAuthAppProfile
+  fields:
+    clientid: CHANGEME
+    clientsecret: CHANGEME
+    locationOfClientDetails: QueryString
+    redirectURL: https://localhost:8088/client/google/callback
+    driftTime: 1
+    name: Google App
+  children:
+  - type: ScopeList
+    fields:
+      name: email
+  - type: ScopeList
+    fields:
+      name: https://www.googleapis.com/auth/calendar
+  - type: ScopeList
+    fields:
+      name: openid
+  - type: ScopeList
+    fields:
+      name: profile

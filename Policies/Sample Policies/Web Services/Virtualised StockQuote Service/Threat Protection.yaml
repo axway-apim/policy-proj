@@ -1,0 +1,70 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Check Message Size
+  name: Threat Protection
+  description: Detects Viruses and Attacks
+  category: /System/Policy Categories/security
+children:
+- type: MessageSizeFilter
+  fields:
+    atMostSize: 1500
+    name: Check Message Size
+  routing:
+    success: ../Check XML Complexity
+    failure: ../Call 'Return Invalid Message Failure'
+  logging:
+    fatal: 'Error during message size filtering. Error: ${circuit.exception}'
+    failure: Failed message size filtering
+    success: Passed message size filtering
+- type: XmlComplexityFilter
+  fields:
+    maxNumNodes: 10
+    maxNumChildren: 20
+    maxDepthDescendantNodes: 3
+    name: Check XML Complexity
+  routing:
+    success: ../Block Threatening Content
+    failure: ../Call 'Return Invalid Message Failure'
+  logging:
+    fatal: 'Error during XML message complexity filtering. Error: ${circuit.exception}'
+    failure: Failed XML message complexity filtering
+    success: Passed XML message complexity filtering
+- type: ThreateningContentFilter
+  fields:
+    threatRegExprs:
+    - /Libraries/Regular Expression Library/Threatening Content Regular Expressions/DOCTYPE DTD Reference
+    - /Libraries/Regular Expression Library/Threatening Content Regular Expressions/OR Attack
+    - /Libraries/Regular Expression Library/Threatening Content Regular Expressions/SQL Delete Attack
+    - /Libraries/Regular Expression Library/Threatening Content Regular Expressions/SQL Drop Table Attack
+    - /Libraries/Regular Expression Library/Threatening Content Regular Expressions/SQL Insert Attack
+    - /Libraries/Regular Expression Library/Threatening Content Regular Expressions/SQL Server Shutdown Attack
+    - /Libraries/Regular Expression Library/Threatening Content Regular Expressions/SQL Update Attack
+    - /Libraries/Regular Expression Library/Threatening Content Regular Expressions/XML Processing Instruction
+    scanMimeTypes:
+    - /Server Settings/Mime Types/application/*+xml
+    - /Server Settings/Mime Types/application/xml
+    - /Server Settings/Mime Types/application/xml*
+    - /Server Settings/Mime Types/http://schemas.xmlsoap.org/soap/envelope/
+    - /Server Settings/Mime Types/text/html
+    - /Server Settings/Mime Types/text/plain
+    - /Server Settings/Mime Types/text/richtext
+    - /Server Settings/Mime Types/text/xml
+    - /Server Settings/Mime Types/text/xml*
+    name: Block Threatening Content
+  routing:
+    failure: ../Call 'Return Invalid Message Failure'
+  logging:
+    fatal: 'Error occurred while scanning the message for threatening content. Error: ${circuit.exception}'
+    failure: Message contains known attacks
+    success: Message is clean and contains no know threats
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Sample Policies/Web Services/Virtualised StockQuote Service/Fault Handlers/Return Invalid Message Failure
+    name: Call 'Return Invalid Message Failure'
+  logging:
+    maskType: FILTER
+    mask: 0
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut

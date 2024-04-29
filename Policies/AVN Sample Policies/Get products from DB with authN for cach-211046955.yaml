@@ -1,0 +1,111 @@
+---
+type: FilterCircuit
+fields:
+  start: ./HTTP Basic
+  name: Get products from DB with authN for cache
+  description: ""
+children:
+- type: HttpBasicFilter
+  fields:
+    credentialFormat: Username
+    removeAuthNHeader: false
+    repository: /External Connections/Authentication Repositories/LDAP Repositories/api-env OpenLDAP
+    name: HTTP Basic
+  routing:
+    success: ../Trace Filter
+    failure: ../Set error
+  logging:
+    fatal: 'Error occurred while authenticating via HTTP Basic. Error: ${circuit.exception}'
+    failure: HTTP basic authentication failed
+    success: HTTP basic authentication success for ${authentication.subject.id}
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceBody: true
+    name: Trace Filter
+  routing:
+    success: ../Retrieve User info
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: AttributeExtractLdapFilter
+  fields:
+    ldapDir: /External Connections/LDAP Directories/api-env LDAP
+    name: Retrieve User info
+  routing:
+    success: ../Compare Attribute
+  logging:
+    fatal: 'Error occurred while extracting attributes from LDAP. Error: ${circuit.exception}'
+    failure: Failed to extract attributes from LDAP
+    success: Extracted attributes from LDAP
+  children:
+  - type: LdapSearchAttributes
+    fields:
+      name: Retrieve User info
+      base: ou=users,dc=demo.axway,dc=com
+      filter: (&(uid=${authentication.subject.id})(objectClass=inetOrgPerson))
+      scope: 3
+  - type: LookupAttribute
+    fields:
+      name: o
+  - type: LookupAttribute
+    fields:
+      name: mail
+  - type: LookupAttribute
+    fields:
+      name: cn
+  - type: LookupAttribute
+    fields:
+      name: description
+  - type: LookupAttribute
+    fields:
+      name: employeeType
+- type: CompareAttributeFilter
+  fields:
+    name: Compare Attribute
+  routing:
+    failure: ../Set Message "Unauthorized"
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${user[0].o[0]}
+      expression: ${api.custom.properties.Access}
+- type: ChangeMessageFilter
+  fields:
+    body: '{"Error": "You are not authorized to use this API"}'
+    outputContentType: application/json
+    name: Set Message "Unauthorized"
+  routing:
+    success: ../Reflect Message 403
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 403
+    name: Reflect Message 403
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: ChangeMessageFilter
+  fields:
+    body: '{"Error": "Enter valid user ID and password"}'
+    outputContentType: application/json
+    name: Set error
+  routing:
+    success: ../Reflect error
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 401
+    name: Reflect error
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

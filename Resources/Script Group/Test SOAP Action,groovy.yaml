@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Test SOAP Action
+  description: Tests the SOAP Action HTTP header to see if it has the value "test"
+  engineName: groovy
+  script: '{{file "Test SOAP Action.groovy"}}'

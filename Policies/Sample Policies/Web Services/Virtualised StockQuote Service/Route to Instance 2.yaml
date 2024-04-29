@@ -1,0 +1,47 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Connect to Instance2
+  name: Route to Instance 2
+  description: ""
+children:
+- type: ConnectToURLFilter
+  fields:
+    url: http://stockquote.com/stockquote/instance2
+    caCerts: []
+    useRootCerts: false
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv2
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Connect to Instance2
+  routing:
+    success: ../Set Instance Name
+    failure: ../Call 'Return Routing Failure'
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: stockquote.instance.name
+    attributeValue: instance2
+    name: Set Instance Name
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Sample Policies/Web Services/Virtualised StockQuote Service/Fault Handlers/Return Routing Failure
+    name: Call 'Return Routing Failure'
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut

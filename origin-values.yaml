@@ -1,0 +1,10 @@
+---
+ASESecurity:
+  ASE_Request_Connecter:
+    Connect_to_ASE_Request:
+      url: http://your.ASE-server.com/ase/request
+    Set_ASE_Token:
+      attributeValue: ""
+  ASE_Response_Connecter:
+    Connect_to_ASE_Response:
+      url: http://your.ASE-server.com/ase/response

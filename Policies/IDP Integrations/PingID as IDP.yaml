@@ -1,0 +1,15 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call PingID Validation
+  name: PingID as IDP
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/PingID/Validate PingID Token
+    name: Call PingID Validation
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut

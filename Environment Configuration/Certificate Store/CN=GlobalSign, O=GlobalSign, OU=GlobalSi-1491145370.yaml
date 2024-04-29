@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=GlobalSign, O=GlobalSign, OU=GlobalSign ECC Root CA - R5
+  content: '{{file "CN=GlobalSign, O=GlobalSign, OU=GlobalSi-1491145370-cert.pem"}}'

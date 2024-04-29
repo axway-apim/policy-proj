@@ -1,0 +1,6 @@
+---
+type: StaticContent
+fields:
+  fileSystemPath: $VDISTDIR/samples/oauth/templates/
+  generateIndex: true
+  uriprefix: /xlib/

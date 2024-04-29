@@ -1,0 +1,31 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Check Session
+  name: Check/Create Session Cookie
+  description: ""
+children:
+- type: CheckSessionFilter
+  fields:
+    cookie: CLIENTCOOKIE
+    name: Check Session
+  routing:
+    success: ../True Filter
+    failure: ../Create Session
+- type: TrueFilter
+  fields:
+    name: True Filter
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: CreateSessionFilter
+  fields:
+    onlySendOverSSL: true
+    httpOnly: true
+    uriprefix: /client
+    domain: ""
+    cookie: CLIENTCOOKIE
+    name: Create Session
+  routing:
+    success: ../True Filter

@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Staat der Nederlanden EV Root CA, O=Staat der Nederlanden, C=NL
+  content: '{{file "CN=Staat der Nederlanden EV Root CA, O=S-215267823-cert.pem"}}'

@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=LuxTrust Global Root 2, O=LuxTrust S.A., C=LU
+  content: '{{file "CN=LuxTrust Global Root 2, O=LuxTrust S.-255385384-cert.pem"}}'

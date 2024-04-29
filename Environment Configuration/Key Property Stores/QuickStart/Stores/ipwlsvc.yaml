@@ -1,0 +1,10 @@
+---
+type: KPSReadWriteStore
+fields:
+  key: ServiceId
+  readKey: ""
+  name: ipwlsvc
+  description: IP whitelisting table
+  type: /Environment Configuration/Key Property Stores/QuickStart/Types/ipwlsvc
+  dataSource: /Environment Configuration/Key Property Stores/API Server/Data Sources/Cassandra Storage
+  aliases: ipwlsvc

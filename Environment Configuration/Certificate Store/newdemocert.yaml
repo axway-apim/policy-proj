@@ -1,0 +1,10 @@
+---
+type: Certificate
+fields:
+  dname: newdemocert
+  engine: ""
+  keyId: ""
+  conversation: ""
+  certificateRealm: ""
+  content: '{{file "newdemocert-cert.pem"}}'
+  key: '{{file "newdemocert-key.pem"}}'

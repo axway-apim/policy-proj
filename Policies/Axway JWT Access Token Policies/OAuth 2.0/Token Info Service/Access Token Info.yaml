@@ -1,0 +1,66 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call 'Verify and Extract JWT'
+  name: Access Token Info
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Axway JWT Access Token Policies/OAuth 2.0/JWT Policies/Verify and Extract JWT
+    name: Call 'Verify and Extract JWT'
+  routing:
+    success: ../Trace Filter
+    failure: ../Set Error Message
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    traceBody: true
+    name: Trace Filter
+  routing:
+    success: ../Access Token Information
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: AccessTokenInfoFilter
+  fields:
+    accessTokenLocation: SELECTOR
+    accessTokenLocationSelector: ${var.axway.oauth.accesstoken}
+    tokenStore: /Libraries/OAuth2 Stores/Access Token Stores/OAuth Access Token Store
+    metricsMask: 1
+    name: Access Token Information
+  routing:
+    success: ../JSON Add Node
+- type: JSONAddNodeFilter
+  fields:
+    expression: $
+    insertLocationType: 1
+    objectFieldName: jwt_token
+    name: JSON Add Node
+    content: '{{file "Access Token Info-Files/JSON Add Node.json"}}'
+  routing:
+    failure: ../Set Error Message
+- type: ChangeMessageFilter
+  fields:
+    outputContentType: application/json
+    name: Set Error Message
+    body: '{{file "Access Token Info-Files/Set Error Message.json"}}'
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 401
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

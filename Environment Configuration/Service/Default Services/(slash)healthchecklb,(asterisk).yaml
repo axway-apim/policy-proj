@@ -1,0 +1,27 @@
+---
+type: XMLFirewall
+fields:
+  filterCircuit: /Policies/Policy Library/Health Check LB
+  uriprefix: /healthchecklb
+  trafficMonitoringEnabled: false
+children:
+- type: PortableCircuitReference
+  fields:
+    name: CUSTOM_POLICY_REQ
+    priority: 1
+- type: SoftCircuitReference
+  fields:
+    circuitPK: system.policy.response
+    name: GLOBAL_POLICY_RSP
+    priority: 4
+    evaluate: false
+- type: SoftCircuitReference
+  fields:
+    circuitPK: system.policy.request
+    name: GLOBAL_POLICY_REQ
+    priority: 0
+    evaluate: false
+- type: PortableCircuitReference
+  fields:
+    name: CUSTOM_POLICY_RSP
+    priority: 3

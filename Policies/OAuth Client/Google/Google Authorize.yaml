@@ -1,0 +1,55 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call 'Check/Create Session Cookie'
+  name: Google Authorize
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/OAuth Client/Session Management/Check/Create Session Cookie
+    name: Call 'Check/Create Session Cookie'
+  routing:
+    success: ../Call 'Is Logged In'
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/OAuth Client/Session Management/Is Logged In
+    name: Call 'Is Logged In'
+  routing:
+    success: ../Set Application Scopes For Accessing Resource
+    failure: ../Set openID Scope for Login
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: setscopes
+    attributeValue: https://www.googleapis.com/auth/calendar
+    name: Set Application Scopes For Accessing Resource
+  routing:
+    success: ../Redirect to Authorization Server
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: RedirectToAuthzServerFilter
+  fields:
+    profile: /External Connections/Auth Profiles/OAuth2/Google/Google App
+    scopeOverrides: ${setscopes}
+    name: Redirect to Authorization Server
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: setscopes
+    attributeValue: openid email profile https://www.googleapis.com/auth/calendar
+    name: Set openID Scope for Login
+  routing:
+    success: ../Redirect to Authorization Server
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value

@@ -1,0 +1,5 @@
+---
+type: Cache
+fields:
+  name: Method Mock-Cache
+  timeToLiveSeconds: 300

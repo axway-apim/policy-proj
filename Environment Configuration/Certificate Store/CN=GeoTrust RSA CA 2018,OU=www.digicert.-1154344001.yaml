@@ -1,0 +1,9 @@
+---
+type: Certificate
+fields:
+  dname: CN=GeoTrust RSA CA 2018,OU=www.digicert.com,O=DigiCert Inc,C=US
+  engine: ""
+  keyId: ""
+  conversation: ""
+  certificateRealm: ""
+  content: '{{file "CN=GeoTrust RSA CA 2018,OU=www.digicert.-1154344001-cert.pem"}}'

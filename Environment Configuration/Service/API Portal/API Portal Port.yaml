@@ -1,0 +1,20 @@
+---
+type: SSLInterface
+fields:
+  serverCert: /Environment Configuration/Certificate Store/newdemocert
+  caCert: []
+  ciphers: FIPS:!SSLv3:!aNULL
+  ssloptions: nosslv3
+  resolveSubjectCNtoNetAddr: false
+  name: API Portal Port
+  port: ${env.PORT.APIPORTAL}
+  opsSettingsUsage: PORT
+  recordInboundTxns: false
+  recordOutboundTxns: false
+  recordCircuitPath: false
+  recordTrace: false
+  recordSent: false
+  recordReceived: false
+  outputEncodings:
+  - deflate
+  - gzip

@@ -1,0 +1,39 @@
+---
+type: FilterCircuit
+fields:
+  start: ./1. Retrieve SOAP Operation Name
+  name: StockQuote
+  description: ""
+children:
+- type: AttributeExtractXPathFilter
+  fields:
+    attributeLocation: /Resources/XPath Definitions/Attribute Locations/The Soap Operation Name
+    attributeName: soap.operation
+    name: 1. Retrieve SOAP Operation Name
+  routing:
+    success: ../2. Switch on SOAP Operation value
+  logging:
+    fatal: 'Error occurred while extracting attributes via XPath. Error: ${circuit.exception}'
+    failure: Failed to extract attributes via XPath
+    success: Extracted attribute from message via XPath
+- type: SwitchFilter
+  fields:
+    attributeName: ${soap.operation}
+    defaultOption: RETURN_FALSE
+    defaultCircuit: /null
+    name: 2. Switch on SOAP Operation value
+  children:
+  - type: SwitchCircuitReference
+    fields:
+      comparatorType: is
+      compareWith: getPrice
+      name: Id-0001317910719741-00000000007aa36c-1
+      priority: 0
+      circuitPK: /Policies/Sample Policies/Web Services/Demo StockQuote Web Service/StockQuote GetPrice
+  - type: SwitchCircuitReference
+    fields:
+      comparatorType: is
+      compareWith: update
+      name: Id-0001318891250353-0000000000f72515-1
+      priority: 1
+      circuitPK: /Policies/Sample Policies/Web Services/Demo StockQuote Web Service/StockQuote Update

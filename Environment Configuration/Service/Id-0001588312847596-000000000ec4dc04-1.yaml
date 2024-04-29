@@ -1,0 +1,31 @@
+---
+type: JMSSession
+fields:
+  servicePK: /External Connections/JMS Services/Embedded Apache ActiveMQ
+  name: Id-0001588312847596-000000000ec4dc04-1
+children:
+- type: JMSConsumer
+  fields:
+    destination: RedMonk
+    selector: ""
+    filterCircuit: /Policies/Forrester Wave Demo/Convert SOAP to JSON
+    subscriberName: ""
+- type: JMSConsumer
+  fields:
+    destination: IDC
+    selector: ""
+    filterCircuit: /Policies/Forrester Wave Demo/Convert SOAP to JSON
+    subscriberName: ""
+- type: JMSConsumer
+  fields:
+    destination: Ovum
+    selector: ""
+    filterCircuit: /Policies/Forrester Wave Demo/Convert SOAP to JSON
+    subscriberName: ""
+- type: JMSConsumer
+  fields:
+    attributeName: account.id
+    destination: Gartner
+    selector: ""
+    filterCircuit: /Policies/Forrester Wave Demo/Convert SOAP to JSON
+    subscriberName: ""

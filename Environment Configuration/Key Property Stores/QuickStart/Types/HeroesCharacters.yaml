@@ -1,0 +1,26 @@
+---
+type: KPSType
+fields:
+  name: HeroesCharacters
+  description: Type information for Heroes characters
+children:
+- type: KPSTypeProperty
+  fields:
+    name: species
+    type: java.lang.String
+- type: KPSTypeProperty
+  fields:
+    name: shoponline
+    type: java.lang.Boolean
+- type: KPSTypeProperty
+  fields:
+    name: faction
+    type: java.lang.String
+- type: KPSTypeProperty
+  fields:
+    name: password
+    type: java.lang.String
+- type: KPSTypeProperty
+  fields:
+    name: username
+    type: java.lang.String

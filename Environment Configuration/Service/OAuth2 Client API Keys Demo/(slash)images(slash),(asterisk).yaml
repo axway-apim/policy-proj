@@ -1,0 +1,5 @@
+---
+type: StaticFile
+fields:
+  file: $VDISTDIR/samples/oauth/clientdemo/home/images/
+  uriprefix: /images/

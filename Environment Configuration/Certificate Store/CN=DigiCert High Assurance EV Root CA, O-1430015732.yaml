@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=DigiCert High Assurance EV Root CA, OU=www.digicert.com, O=DigiCert Inc, C=US
+  content: '{{file "CN=DigiCert High Assurance EV Root CA, O-1430015732-cert.pem"}}'

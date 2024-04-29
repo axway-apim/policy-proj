@@ -1,0 +1,26 @@
+---
+type: OAuthProviderProfile
+fields:
+  name: SalesForce
+  class: com.vordel.oauth.client.providers.OAuth2ProviderSalesForce
+  authzUrl: https://login.salesforce.com/services/oauth2/authorize
+  tokenUrl: https://login.salesforce.com/services/oauth2/token
+  tokenStore: /Libraries/OAuth2 Stores/Client Access Token Stores/OAuth Client Access Token Store
+children:
+- type: OAuthAppProfile
+  fields:
+    clientid: CHANGEME
+    clientsecret: Q0hBTkdFTUU=
+    oauthFlowType: jwt
+    jwtSigner: /Environment Configuration/Certificate Store/CN=Change this for production
+    redirectURL: ""
+    samlSigner: /Environment Configuration/Certificate Store/CN=Change this for production
+    samlResourceOwnerId: qadublin@apigateway.com
+    lifeTime: 8400
+    driftTime: 60
+    name: salesforce jwt app
+  children:
+  - type: AdditionalClaims
+    fields:
+      name: prn
+      value: CHANGEME

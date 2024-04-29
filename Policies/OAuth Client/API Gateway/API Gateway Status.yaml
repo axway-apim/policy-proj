@@ -1,0 +1,64 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call 'Is Logged In'
+  name: API Gateway Status
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/OAuth Client/Session Management/Is Logged In
+    name: Call 'Is Logged In'
+  routing:
+    success: ../Retrieve Client Access Token using authentication.subject.id
+    failure: ../Redirect to Login Page
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: RetrieveTokenFromStorageFilter
+  fields:
+    profile: /External Connections/Auth Profiles/OAuth2/API Gateway/Sample Client Authzcode App
+    name: Retrieve Client Access Token using authentication.subject.id
+  routing:
+    success: ../Check available tokens
+    failure: ../Check available tokens
+- type: JavaScriptFilter
+  fields:
+    engineName: jython
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Check available tokens
+    script: '{{file "API Gateway Status-Files/Check available tokens.py"}}'
+  routing:
+    success: ../Build JSON response
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: ChangeMessageFilter
+  fields:
+    body: '{"authorised":${authorized}, "expired":${expired}}'
+    outputContentType: application/json
+    name: Build JSON response
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /client/logout/
+    outputContentType: text/html
+    content: fail
+    name: Redirect to Login Page

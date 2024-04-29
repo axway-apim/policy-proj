@@ -1,0 +1,47 @@
+---
+type: FilterCircuit
+fields:
+  start: ./HTTP Basic authentication
+  name: Basic authN
+  description: ""
+children:
+- type: HttpBasicFilter
+  fields:
+    credentialFormat: Username
+    removeAuthNHeader: false
+    repository: /External Connections/Authentication Repositories/LDAP Repositories/api-env OpenLDAP
+    name: HTTP Basic authentication
+  routing:
+    failure: ../Set 401 body
+  logging:
+    fatal: 'Error occurred while authenticating via HTTP Basic. Error: ${circuit.exception}'
+    failure: HTTP basic authentication failed
+    success: HTTP basic authentication success for ${authentication.subject.id}
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.body
+    attributeValue: '{"Error": "Enter valid user ID and password"}'
+    name: Set 401 body
+  routing:
+    success: ../Set 401 code
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: error.http.code
+    attributeValue: 401
+    name: Set 401 code
+  routing:
+    success: ../False Filter 401
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: FalseFilter
+  fields:
+    name: False Filter 401
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""

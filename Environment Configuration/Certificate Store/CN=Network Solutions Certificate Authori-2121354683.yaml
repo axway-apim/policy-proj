@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Network Solutions Certificate Authority, O=Network Solutions L.L.C., C=US
+  content: '{{file "CN=Network Solutions Certificate Authori-2121354683-cert.pem"}}'

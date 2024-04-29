@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Base64 Encode
+  description: Retrieves a message attribute and base64 encodes it
+  engineName: jython
+  script: '{{file "Base64 Encode.py"}}'

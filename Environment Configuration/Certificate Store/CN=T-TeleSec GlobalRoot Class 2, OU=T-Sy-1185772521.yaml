@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=T-TeleSec GlobalRoot Class 2, OU=T-Systems Trust Center, O=T-Systems Enterprise Services GmbH, C=DE
+  content: '{{file "CN=T-TeleSec GlobalRoot Class 2, OU=T-Sy-1185772521-cert.pem"}}'

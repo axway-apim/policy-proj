@@ -1,0 +1,7 @@
+---
+type: Group
+fields:
+  member:
+  - /Environment Configuration/Default User Store/Garry
+  - /Environment Configuration/Default User Store/Genny
+  name: Gold

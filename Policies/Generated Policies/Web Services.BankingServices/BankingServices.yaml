@@ -1,0 +1,286 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Service Handler for 'BankingServices'
+  name: BankingServices
+  category: /System/Policy Categories/generated
+children:
+- type: WSFilter
+  fields:
+    routingMode: delegate
+    specifiedURL: ""
+    routingCircuit: /Policies/0 - Mockup/Banking Services/Routing
+    reqChainIntermediary: /null
+    rspChainIntermediary: /null
+    beforeWSDLResponse: /null
+    validationCircuit: /null
+    webService: /APIs/Web Service Repository/Web Services/BankingServices
+    metricsMask: 1
+    name: Service Handler for 'BankingServices'
+  children:
+  - type: OperationCircuitChain
+    fields:
+      beforeOperationHooks: /null
+      afterOperationHooks: /null
+      name: Response To Front End
+    children:
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: FindAccountId
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}FindAccountId(SOAP 1.2)'
+        priority: 6
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: GetAccountName
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}GetAccountName(SOAP 1.2)'
+        priority: 7
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: testTimeout
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}testTimeout(SOAP 1.2)'
+        priority: 8
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: GetAccountName
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}GetAccountName(SOAP 1.1)'
+        priority: 3
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: AccountBalance
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}AccountBalance(SOAP 1.2)'
+        priority: 5
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: testTimeout
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}testTimeout(SOAP 1.1)'
+        priority: 4
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: FindAccountId
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}FindAccountId(SOAP 1.1)'
+        priority: 2
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: AccountBalance
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}AccountBalance(SOAP 1.1)'
+        priority: 1
+  - type: ConnectionFilter
+    fields:
+      caCerts: []
+      ciphers: DEFAULT
+      ssloptions: []
+      name: Connection Details
+    children:
+    - type: SaveToFileFilter
+      fields:
+        name: Persistence Details
+  - type: OperationCircuitChain
+    fields:
+      beforeOperationHooks: /null
+      afterOperationHooks: /null
+      name: Request From Front End
+    children:
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: AccountBalance
+        soapAction: ^http://axway.com/BankingServices/AccountBalance$
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}AccountBalance(SOAP 1.2)'
+        priority: 5
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: GetAccountName
+        soapAction: ^http://axway.com/BankingServices/GetAccountName$
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}GetAccountName(SOAP 1.2)'
+        priority: 7
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: FindAccountId
+        soapAction: ^http://axway.com/BankingServices/FindAccountId$
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}FindAccountId(SOAP 1.2)'
+        priority: 6
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: testTimeout
+        soapAction: ^http://axway.com/BankingServices/testTimeout$
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}testTimeout(SOAP 1.1)'
+        priority: 4
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: GetAccountName
+        soapAction: ^http://axway.com/BankingServices/GetAccountName$
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}GetAccountName(SOAP 1.1)'
+        priority: 3
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: AccountBalance
+        soapAction: ^http://axway.com/BankingServices/AccountBalance$
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}AccountBalance(SOAP 1.1)'
+        priority: 1
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: FindAccountId
+        soapAction: ^http://axway.com/BankingServices/FindAccountId$
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}FindAccountId(SOAP 1.1)'
+        priority: 2
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: testTimeout
+        soapAction: ^http://axway.com/BankingServices/testTimeout$
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}testTimeout(SOAP 1.2)'
+        priority: 8
+  - type: OperationCircuitChain
+    fields:
+      beforeOperationHooks: /null
+      afterOperationHooks: /null
+      name: Request To Back End
+    children:
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: AccountBalance
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}AccountBalance(SOAP 1.1)'
+        priority: 1
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: AccountBalance
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}AccountBalance(SOAP 1.2)'
+        priority: 5
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: FindAccountId
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}FindAccountId(SOAP 1.1)'
+        priority: 2
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: GetAccountName
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}GetAccountName(SOAP 1.2)'
+        priority: 7
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: GetAccountName
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}GetAccountName(SOAP 1.1)'
+        priority: 3
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: FindAccountId
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}FindAccountId(SOAP 1.2)'
+        priority: 6
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: testTimeout
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}testTimeout(SOAP 1.1)'
+        priority: 4
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: testTimeout
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}testTimeout(SOAP 1.2)'
+        priority: 8
+  - type: OperationCircuitChain
+    fields:
+      beforeOperationHooks: /null
+      afterOperationHooks: /null
+      name: Response From Back End
+    children:
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: testTimeout
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}testTimeout(SOAP 1.2)'
+        priority: 8
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: testTimeout
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}testTimeout(SOAP 1.1)'
+        priority: 4
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: GetAccountName
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}GetAccountName(SOAP 1.2)'
+        priority: 7
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: FindAccountId
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}FindAccountId(SOAP 1.1)'
+        priority: 2
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: AccountBalance
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}AccountBalance(SOAP 1.1)'
+        priority: 1
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: GetAccountName
+        soapVersion: SOAP 1.1
+        name: '{http://axway.com/BankingServices/}GetAccountName(SOAP 1.1)'
+        priority: 3
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: FindAccountId
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}FindAccountId(SOAP 1.2)'
+        priority: 6
+    - type: OperationCircuitReference
+      fields:
+        operationNamespace: http://axway.com/BankingServices/
+        operationName: AccountBalance
+        soapVersion: SOAP 1.2
+        name: '{http://axway.com/BankingServices/}AccountBalance(SOAP 1.2)'
+        priority: 5

@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=SwissSign Silver CA - G2, O=SwissSign AG, C=CH
+  content: '{{file "CN=SwissSign Silver CA - G2, O=SwissSign-1554141494-cert.pem"}}'

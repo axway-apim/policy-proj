@@ -1,0 +1,74 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract REST Request Attributes
+  name: Azure Token Verification
+  description: This policy extracts the acccess token provided as Bearer token in Authorization header, validates the token locally (no call out to introspection api provided by Okta).
+children:
+- type: ExtractRESTAttributesFilter
+  fields:
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Is there OAuth Access Token?
+- type: CompareAttributeFilter
+  fields:
+    name: Is there OAuth Access Token?
+  routing:
+    success: ../Store Original Message
+    failure: ../Stop
+  logging:
+    maskType: FILTER
+    mask: 1
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.header.Authorization}
+      matchType: IS_NOT
+      expression: "null"
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.header.Authorization}
+      matchType: BEGINS_WITH
+      expression: 'Bearer '
+- type: StoreContentBodyToAttributeFilter
+  fields:
+    name: Store Original Message
+  routing:
+    success: ../Validate JWT
+  logging:
+    fatal: 'Error in storing the message. Error: ${circuit.exception}'
+    failure: Failed to store the message in attribute
+    success: 'Success in storing the message to attribute '
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/Azure/Validate JWT
+    name: Validate JWT
+  routing:
+    success: ../Restore Message
+    failure: ../Stop
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: RestoreContentBodyFromAttributeFilter
+  fields:
+    name: Restore Message
+  routing:
+    success: ../Proceed
+  logging:
+    fatal: 'Error in restoring the message. Error: ${circuit.exception}'
+    failure: Failed to restore the message
+    success: Success in restoring the message
+- type: TrueFilter
+  fields:
+    name: Proceed
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: FalseFilter
+  fields:
+    name: Stop
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""

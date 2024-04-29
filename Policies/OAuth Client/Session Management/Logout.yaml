@@ -1,0 +1,67 @@
+---
+type: FilterCircuit
+fields:
+  start: ./End Session
+  name: Logout
+  description: ""
+children:
+- type: EndSessionFilter
+  fields:
+    removeCookie: true
+    uriprefix: /client
+    domain: ""
+    cookie: CLIENTCOOKIE
+    name: End Session
+  routing:
+    success: ../Cache Control Header
+    failure: ../Cache Control Header
+- type: AddHTTPHeaderFilter
+  fields:
+    headerName: Cache-Control
+    headerValue: no-cache, no-store, must-revalidate
+    name: Cache Control Header
+  routing:
+    success: ../Pragma Header
+  logging:
+    fatal: 'Error in adding the HTTP header to the message. Error: ${circuit.exception}'
+    failure: Failed in adding the HTTP header to the message
+    success: Success in adding the HTTP header to the message
+- type: AddHTTPHeaderFilter
+  fields:
+    headerName: Pragma
+    headerValue: no-cache
+    name: Pragma Header
+  routing:
+    success: ../Expires Header
+  logging:
+    fatal: 'Error in adding the HTTP header to the message. Error: ${circuit.exception}'
+    failure: Failed in adding the HTTP header to the message
+    success: Success in adding the HTTP header to the message
+- type: AddHTTPHeaderFilter
+  fields:
+    headerName: Expires
+    headerValue: 0
+    name: Expires Header
+  routing:
+    success: ../Remove Cookie Header
+  logging:
+    fatal: 'Error in adding the HTTP header to the message. Error: ${circuit.exception}'
+    failure: Failed in adding the HTTP header to the message
+    success: Success in adding the HTTP header to the message
+- type: RemoveHTTPHeaderFilter
+  fields:
+    headerName: Cookie
+    name: Remove Cookie Header
+  routing:
+    success: ../Redirect to login
+  logging:
+    fatal: 'Error in removing the HTTP header from the message. Error: ${circuit.exception}'
+    failure: Failed in removing the HTTP header from the message
+    success: Success in removing the HTTP header from the message
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /
+    outputContentType: text/html
+    content: fail
+    name: Redirect to login

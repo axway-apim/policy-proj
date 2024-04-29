@@ -1,0 +1,39 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Retrieve symbol value from message
+  name: Route based on Symbol Value
+  description: Routes on Symbol Value
+  category: /System/Policy Categories/content-filtering
+children:
+- type: AttributeExtractXPathFilter
+  fields:
+    attributeLocation: /Resources/XPath Definitions/Attribute Locations/SymbolValue
+    attributeName: message.symbol.value
+    name: Retrieve symbol value from message
+  routing:
+    success: ../Choose Instance to send request to
+  logging:
+    fatal: 'Error occurred while extracting attributes via XPath. Error: ${circuit.exception}'
+    failure: Symbol not found in incoming message
+    success: Extracted attribute from message via XPath
+- type: SwitchFilter
+  fields:
+    attributeName: ${message.symbol.value}
+    defaultCircuit: /Policies/Sample Policies/Web Services/Virtualised StockQuote Service/Route to Instance 1
+    name: Choose Instance to send request to
+  children:
+  - type: SwitchCircuitReference
+    fields:
+      comparatorType: regular-expression
+      compareWith: '[L-Zl-z][A-Za-z]*'
+      name: Id-0001317222281337-0000000001a9bced-1
+      priority: 1
+      circuitPK: /Policies/Sample Policies/Web Services/Virtualised StockQuote Service/Route to Instance 2
+  - type: SwitchCircuitReference
+    fields:
+      comparatorType: regular-expression
+      compareWith: '[A-Ka-k][A-Za-z]*'
+      name: Id-0001317222017831-0000000001a9bced-1
+      priority: 0
+      circuitPK: /Policies/Sample Policies/Web Services/Virtualised StockQuote Service/Route to Instance 1

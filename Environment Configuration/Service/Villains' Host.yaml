@@ -1,0 +1,15 @@
+---
+type: RemoteHost
+fields:
+  alias: Villains' Host
+  name: villains.org
+  maxConnections: 128
+  offerTlsServerName: false
+children:
+- type: RoundRobinLbCfg
+  fields:
+    name: 35910b4d-3dff-4208-94f2-76cd9d872566
+- type: AddressRank
+  fields:
+    rank: 0
+    addresses: localhost:${env.PORT.TRAFFIC}

@@ -1,0 +1,23 @@
+---
+type: KPSType
+fields:
+  name: errorCodesConfig
+children:
+- type: KPSTypeProperty
+  fields:
+    name: errorCode
+    type: java.lang.String
+    key: ""
+    value: ""
+- type: KPSTypeProperty
+  fields:
+    name: errorDescription
+    type: java.lang.String
+    key: ""
+    value: ""
+- type: KPSTypeProperty
+  fields:
+    name: httpCode
+    type: java.lang.String
+    key: ""
+    value: ""

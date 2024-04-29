@@ -1,0 +1,17 @@
+---
+type: KPSType
+fields:
+  name: scopesDes
+children:
+- type: KPSTypeProperty
+  fields:
+    name: scope
+    type: java.lang.String
+    key: ""
+    value: ""
+- type: KPSTypeProperty
+  fields:
+    name: description
+    type: java.lang.String
+    key: ""
+    value: ""

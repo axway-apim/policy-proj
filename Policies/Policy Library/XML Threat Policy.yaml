@@ -1,0 +1,110 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Message Size Detection - only messages up-to 15k allowed
+  name: XML Threat Policy
+children:
+- type: MessageSizeFilter
+  fields:
+    atLeastSize: 1
+    atMostSize: 15000
+    name: Message Size Detection - only messages up-to 15k allowed
+  routing:
+    success: ../Block Non XML SOAP Attachments
+  logging:
+    fatal: 'Error during message size filtering. Error: ${circuit.exception}'
+    failure: Failed message size filtering
+    success: Passed message size filtering
+- type: MimeTypeFilter
+  fields:
+    allowAttachments: false
+    name: Block Non XML SOAP Attachments
+  routing:
+    success: ../Threatening Content
+  logging:
+    fatal: 'Error during attachment filtering. Error: ${circuit.exception}'
+    failure: Request failed attachment filtering
+    success: Request passed attachment filtering
+  children:
+  - type: MimeType
+    fields:
+      mimeType: application/xml*
+      extension: ""
+  - type: MimeType
+    fields:
+      mimeType: attribute/xml
+      extension: ""
+  - type: MimeType
+    fields:
+      mimeType: application/*+xml
+      extension: ""
+  - type: MimeType
+    fields:
+      mimeType: text/xml
+      extension: .xml
+  - type: MimeType
+    fields:
+      mimeType: text/xml*
+      extension: ""
+  - type: MimeType
+    fields:
+      mimeType: application/xml
+      extension: ""
+- type: ThreateningContentFilter
+  fields:
+    scanMimeTypes:
+    - /Server Settings/Mime Types/application/*+xml
+    - /Server Settings/Mime Types/application/xml
+    - /Server Settings/Mime Types/application/xml*
+    - /Server Settings/Mime Types/http://schemas.xmlsoap.org/soap/envelope/
+    - /Server Settings/Mime Types/text/html
+    - /Server Settings/Mime Types/text/plain
+    - /Server Settings/Mime Types/text/richtext
+    - /Server Settings/Mime Types/text/xml
+    - /Server Settings/Mime Types/text/xml*
+    name: Threatening Content
+    category: /System/Filter Categories/content-filtering
+  routing:
+    success: ../XML Complexity
+  logging:
+    fatal: 'Error occurred while scanning the message for threatening content. Error: ${circuit.exception}'
+    failure: Message contains known attacks
+    success: Message is clean and contains no known threats
+- type: XmlComplexityFilter
+  fields:
+    name: XML Complexity
+  routing:
+    success: ../Must be SOAP 1.1 message
+  logging:
+    fatal: 'Error during XML message complexity filtering. Error: ${circuit.exception}'
+    failure: Failed XML message complexity filtering
+    success: Passed XML message complexity filtering
+- type: SchemaValidationFilter
+  fields:
+    schemaKey: OWJWJ4RR653W4RYUBAAZ5W3QDWXEKL2Y
+    validationNodes: /Resources/XPath Definitions/Schema Validation Nodes Xpath/The entire message
+    name: Must be SOAP 1.1 message
+  routing:
+    success: ../Maximum Messages
+  logging:
+    fatal: "Error during schema validation. Error:\t${circuit.exception}"
+    failure: Schema validation failed
+    success: Schema validation passed
+- type: MaximumNumberMsgsFilter
+  fields:
+    algorithm: FTW
+    numberMessages: 10
+    name: Maximum Messages
+  routing:
+    success: ../Reflect
+  logging:
+    fatal: 'Throttle filter aborted: ${circuit.exception}'
+    failure: Maximum number of messages filter was triggered
+    success: Maximum number of messages filter was not triggered
+- type: Reflector
+  fields:
+    name: Reflect
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=USERTrust RSA Certification Authority, O=The USERTRUST Network, L=Jersey City, ST=New Jersey, C=US
+  content: '{{file "CN=USERTrust RSA Certification Authority-831620320-cert.pem"}}'

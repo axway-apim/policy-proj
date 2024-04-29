@@ -1,0 +1,10 @@
+---
+type: KPSReadWriteStore
+fields:
+  key: scope
+  readKey: ""
+  name: scopesDes
+  description: ""
+  type: /Environment Configuration/Key Property Stores/Custom/Type Group/scopesDes
+  dataSource: /null
+  aliases: scopesDes

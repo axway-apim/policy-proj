@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=TUBITAK Kamu SM SSL Kok Sertifikasi - Surum 1, OU=Kamu Sertifikasyon Merkezi - Kamu SM, O=Turkiye Bilimsel ve Teknolojik Arastirma Kurumu - TUBITAK, L=Gebze - Kocaeli, C=TR
+  content: '{{file "CN=TUBITAK Kamu SM SSL Kok Sertifikasi --1641650483-cert.pem"}}'

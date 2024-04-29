@@ -1,0 +1,6 @@
+---
+type: Cache
+fields:
+  name: cachesource
+  eternal: true
+  timeToLiveSeconds: 600

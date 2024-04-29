@@ -1,0 +1,11 @@
+---
+type: RemoteHost
+fields:
+  alias: ec2.amazonaws.com:443
+  name: ec2.amazonaws.com
+  port: 443
+  offerTlsServerName: false
+children:
+- type: RoundRobinLbCfg
+  fields:
+    name: 4e6aef48-eb29-422d-9997-6adeff512858

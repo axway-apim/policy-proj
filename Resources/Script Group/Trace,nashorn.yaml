@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Trace
+  description: Output trace statements
+  engineName: nashorn
+  script: '{{file "Trace.nashorn.js"}}'

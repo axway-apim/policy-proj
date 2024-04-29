@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=AffirmTrust Premium ECC, O=AffirmTrust, C=US
+  content: '{{file "CN=AffirmTrust Premium ECC, O=AffirmTrus-56862048-cert.pem"}}'

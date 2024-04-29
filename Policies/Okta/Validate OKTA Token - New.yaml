@@ -1,0 +1,214 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract REST Request Attributes
+  name: Validate OKTA Token - New
+  description: ""
+children:
+- type: ExtractRESTAttributesFilter
+  fields:
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Store Original Message
+- type: StoreContentBodyToAttributeFilter
+  fields:
+    name: Store Original Message
+  routing:
+    success: ../Is there OAuth Access Token?
+  logging:
+    fatal: 'Error in storing the message. Error: ${circuit.exception}'
+    failure: Failed to store the message in attribute
+    success: 'Success in storing the message to attribute '
+- type: CompareAttributeFilter
+  fields:
+    name: Is there OAuth Access Token?
+  routing:
+    success: ../Extract Access Token From Header
+    failure: ../Stop
+  logging:
+    maskType: FILTER
+    mask: 1
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.header.Authorization}
+      matchType: BEGINS_WITH
+      expression: 'Bearer '
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.header.Authorization}
+      matchType: IS_NOT
+      expression: "null"
+- type: StringReplaceFilter
+  fields:
+    sourceAttribute: http.header.Authorization
+    destAttribute: accesstoken
+    destAttributeOverride: true
+    straightMatchString: 'Bearer '
+    name: Extract Access Token From Header
+  routing:
+    success: ../Get Okta Key
+- type: ConnectToURLFilter
+  fields:
+    url: https://<your Okta instance>/oauth2/default/v1/keys
+    method: GET
+    caCerts: []
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv3
+    - notlsv1
+    - notlsv1_1
+    name: Get Okta Key
+  routing:
+    success: ../Set response to application/json
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: ChangeMessageFilter
+  fields:
+    body: ${content.body}
+    outputContentType: application/json
+    name: Set response to application/json
+  routing:
+    success: ../Set JWK Payload
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: jwk
+    attributeValue: ${content.body}
+    name: Set JWK Payload
+  routing:
+    success: ../JWT Verify
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: JWTVerifyFilter
+  fields:
+    jwsToken: ${accesstoken}
+    keyDiscoverySelection: 1
+    publicKeyAlias: /null
+    useSharedKey: false
+    sharedKeySelection: 0
+    sharedKey: ""
+    setPayloadAsContentBody: false
+    useCtyHeaderContentType: false
+    setPayloadMsgAttribute: true
+    name: JWT Verify
+  routing:
+    success: ../Set JWT Body
+    failure: ../Stop
+- type: ChangeMessageFilter
+  fields:
+    body: ${jwt.body}
+    outputContentType: application/json
+    name: Set JWT Body
+  routing:
+    success: ../Extract claims attributes
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: JSONPathFilter
+  fields:
+    name: Extract claims attributes
+  routing:
+    success: ../Is token active?
+  children:
+  - type: JSONPath
+    fields:
+      attributeName: client_id
+      expression: $.cid
+      unmarshalType: java.lang.String
+      failOnError: true
+  - type: JSONPath
+    fields:
+      attributeName: issued
+      expression: $.iat
+      unmarshalType: java.lang.String
+      failOnError: true
+  - type: JSONPath
+    fields:
+      attributeName: scopes
+      expression: $.scp.*
+      failOnError: true
+  - type: JSONPath
+    fields:
+      attributeName: expires
+      expression: $.exp
+      unmarshalType: java.lang.String
+      failOnError: true
+  - type: JSONPath
+    fields:
+      attributeName: issuer
+      expression: $.iss
+      unmarshalType: java.lang.String
+      failOnError: true
+- type: JavaScriptFilter
+  fields:
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Is token active?
+    script: '{{file "Validate OKTA Token - New-Files/Is token active(qmark).nashorn.js"}}'
+  routing:
+    success: ../Set oauth.token.valid
+    failure: ../Stop
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: oauth.token.valid
+    attributeValue: ${okta.oauth.active}
+    name: Set oauth.token.valid
+  routing:
+    success: ../Set oauth.token.client_id
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: oauth.token.client_id
+    attributeValue: ${client_id}
+    name: Set oauth.token.client_id
+  routing:
+    success: ../Set oauth.token.scopes
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: oauth.token.scopes
+    attributeValue: ${scopes.get(0)}
+    name: Set oauth.token.scopes
+  routing:
+    success: ../Proceed
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: TrueFilter
+  fields:
+    name: Proceed
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: FalseFilter
+  fields:
+    name: Stop
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""

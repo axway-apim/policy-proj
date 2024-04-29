@@ -1,0 +1,1 @@
+select parts_id,type,brand_model from parts_inventory

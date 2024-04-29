@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: OU=certSIGN ROOT CA, O=certSIGN, C=RO
+  content: '{{file "OU=certSIGN ROOT CA, O=certSIGN, C=RO-cert.pem"}}'

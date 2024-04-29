@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: OU=Security Communication RootCA1, O=SECOM Trust.net, C=JP
+  content: '{{file "OU=Security Communication RootCA1, O=SEC-623405482-cert.pem"}}'

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.axway.com/bank" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://www.axway.com/bank" targetNamespace="http://www.axway.com/bank">
+<wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://www.axway.com/bank" xmlns:tns="http://www.axway.com/bank">
+    <xs:element name="RetrieveAccountRequest">
+        <xs:complexType>
+            <xs:sequence>
+				<xs:element type="xs:string" name="id"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RetrieveAccountResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="tns:BankAccount" name="BankAccount"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="BankAccount">
+        <xs:sequence>
+		    <xs:element name="Branch">
+				<xs:complexType>
+                    <xs:sequence>
+                        <xs:element type="xs:string" name="Id"/>
+						<xs:element type="xs:string" name="Name"/>
+						<xs:element type="xs:string" name="Address"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+            <xs:element name="Accounts">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="SavingsAccounts">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="SavingsAccount" maxOccurs="unbounded" minOccurs="0">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element type="xs:decimal" name="Interest"/>
+												<xs:element type="xs:decimal" name="Balance"/>
+											</xs:sequence>
+											<xs:attribute type="xs:string" name="Id" use="required"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="CheckingAccounts">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="CheckingAccount" maxOccurs="unbounded" minOccurs="0">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element type="xs:decimal" name="Interest"/>
+												<xs:element type="xs:decimal" name="Balance"/>
+											</xs:sequence>
+											<xs:attribute type="xs:string" name="Id" use="required"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>				
+		    <xs:element name="Customer">
+				<xs:complexType>
+                    <xs:sequence>
+                        <xs:element type="xs:string" name="Id"/>
+						<xs:element type="xs:string" name="Name"/>
+						<xs:element type="xs:string" name="Address"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			</xs:sequence>
+	</xs:complexType>
+	</xs:schema>
+</wsdl:types>
+<wsdl:message name="RetrieveAccountSoapIn">
+    <wsdl:part name="parameters" element="tns:RetrieveAccountRequest"/>
+</wsdl:message>
+<wsdl:message name="RetrieveAccountSoapOut">
+    <wsdl:part name="parameters" element="tns:RetrieveAccountResponse"/>
+</wsdl:message>
+<wsdl:portType name="BankAccountSoap">
+    <wsdl:operation name="RetrieveAccount">
+        <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieve a bank account</wsdl:documentation>
+        <wsdl:input message="tns:RetrieveAccountSoapIn"/>
+        <wsdl:output message="tns:RetrieveAccountSoapOut"/>
+    </wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="BankAccountSoap12" type="tns:BankAccountSoap">
+	<soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RetrieveAccount">
+        <soap12:operation soapAction="http://www.axway.com/RetrieveAccount" style="document"/>
+        <wsdl:input>
+            <soap12:body use="literal"/>
+        </wsdl:input>
+        <wsdl:output>
+            <soap12:body use="literal"/>
+        </wsdl:output>
+    </wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="BankAccount">
+    <wsdl:port name="BankAccountSoap12" binding="tns:BankAccountSoap12">
+        <soap12:address location="http://api-env:5080/BankAccountService"/>
+    </wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

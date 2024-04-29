@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=SecureSign RootCA11, O="Japan Certification Services, Inc.", C=JP
+  content: '{{file "CN=SecureSign RootCA11, O=(quote)Japan C-121444110-cert.pem"}}'

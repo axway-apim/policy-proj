@@ -1,0 +1,7 @@
+---
+type: Cache
+fields:
+  name: Query results
+  eternal: true
+  timeToIdleSeconds: 30
+  timeToLiveSeconds: 30

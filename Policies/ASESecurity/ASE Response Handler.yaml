@@ -1,0 +1,158 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Extract REST Request Attributes
+  fault: ./Restore Body Fault Handler
+  name: ASE Response Handler
+  description: ""
+children:
+- type: ExtractRESTAttributesFilter
+  fields:
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Get Content-Type
+- type: AttributeExtractHTTPHeaderFilter
+  fields:
+    headerName: Content-Type
+    attributeName: content.type
+    name: Get Content-Type
+  routing:
+    success: ../Get Content-Length
+    failure: ../Get Content-Length
+  logging:
+    fatal: 'Error occurred while extracting attributes from HTTP header. Error: ${circuit.exception}'
+    failure: Failed to extract attribute HTTP header
+    success: Extracted attribute from HTTP header
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Get Content-Length
+    script: '{{file "ASE Response Handler-Files/Get Content-Length.groovy"}}'
+  routing:
+    success: ../Get Connection
+    failure: ../Get Connection
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: AttributeExtractHTTPHeaderFilter
+  fields:
+    headerName: Connection
+    attributeName: http.connection
+    name: Get Connection
+  routing:
+    success: ../Get Transfer Encoding
+    failure: ../Get Transfer Encoding
+  logging:
+    fatal: 'Error occurred while extracting attributes from HTTP header. Error: ${circuit.exception}'
+    failure: Failed to extract attribute HTTP header
+    success: Extracted attribute from HTTP header
+- type: AttributeExtractHTTPHeaderFilter
+  fields:
+    headerName: Transfer-Encoding
+    attributeName: http.transferencoding
+    name: Get Transfer Encoding
+  routing:
+    success: ../Store Original Response from Backend
+    failure: ../Store Original Response from Backend
+  logging:
+    fatal: 'Error occurred while extracting attributes from HTTP header. Error: ${circuit.exception}'
+    failure: Failed to extract attribute HTTP header
+    success: Extracted attribute from HTTP header
+- type: StoreContentBodyToAttributeFilter
+  fields:
+    name: Store Original Response from Backend
+  routing:
+    success: ../Capture backend response
+  logging:
+    fatal: 'Error in storing the message. Error: ${circuit.exception}'
+    failure: Failed to store the message in attribute
+    success: 'Success in storing the message to attribute '
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: ResponseFromBackend
+    attributeValue: ${http.response.status}
+    name: Capture backend response
+  routing:
+    success: ../Set Response for ASE
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Set Response for ASE
+    script: '{{file "ASE Response Handler-Files/Set Response for ASE.groovy"}}'
+  routing:
+    success: ../Set ASE Response
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: ChangeMessageFilter
+  fields:
+    body: ${ASEResponse}
+    outputContentType: application/json
+    name: Set ASE Response
+  routing:
+    success: ../Invoke ASE_Response
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/ASESecurity/ASE_Response_Connecter
+    name: Invoke ASE_Response
+  routing:
+    success: ../Restore Original Response before sending to end client
+    failure: ../Restore Original Response before sending to end client
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: RestoreContentBodyFromAttributeFilter
+  fields:
+    name: Restore Original Response before sending to end client
+  routing:
+    success: ../Restore Headers
+  logging:
+    fatal: 'Error in restoring the message. Error: ${circuit.exception}'
+    failure: Failed to restore the message
+    success: Success in restoring the message
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Restore Headers
+    script: '{{file "ASE Response Handler-Files/Restore Headers.groovy"}}'
+  routing:
+    success: ../Reflect Message
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: Reflector
+  fields:
+    httpResponseStatus: ${BackendResponseCode}
+    name: Reflect Message
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: RestoreContentBodyFromAttributeFilter
+  fields:
+    name: Restore Body Fault Handler
+  logging:
+    fatal: 'Error in restoring the message. Error: ${circuit.exception}'
+    failure: Failed to restore the message
+    success: Success in restoring the message

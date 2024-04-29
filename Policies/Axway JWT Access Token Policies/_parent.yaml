@@ -1,0 +1,4 @@
+---
+type: CircuitContainer
+fields:
+  name: Axway JWT Access Token Policies

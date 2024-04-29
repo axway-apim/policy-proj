@@ -1,0 +1,35 @@
+---
+type: FilterCircuit
+fields:
+  start: ./JWT Sign
+  name: Trace
+  description: ""
+children:
+- type: JWTSignFilter
+  fields:
+    privateKeyAlias: /Environment Configuration/Certificate Store/CN=Change this for production
+    signAlgorithm: PS256
+    sharedKey: ""
+    protectAlgorithm: ""
+    signaturePayloadType: 1
+    generateAUDMsgAttribute: ""
+    generateNBFValue: []
+    generateEXPValue: []
+    headerExtensions: []
+    payloadAudiences: []
+    name: JWT Sign
+- type: TraceFilter
+  fields:
+    traceMsg: Multiorg
+    traceLevel: 3
+    name: Trace Filter
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: ExtractRESTAttributesFilter
+  fields:
+    useQueryString: false
+    name: Extract REST Request Attributes
+  routing:
+    success: ../Trace Filter

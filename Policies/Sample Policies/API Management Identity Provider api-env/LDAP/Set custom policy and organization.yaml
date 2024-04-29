@@ -1,0 +1,40 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Custom definition
+  name: Set custom policy and organization
+  description: ""
+children:
+- type: JavaScriptFilter
+  fields:
+    engineName: js
+    requiredProperties: authN.loginname
+    generatedProperties:
+    - roleName
+    - organizationName
+    consumedProperties: []
+    name: Custom definition
+    script: '{{file "Set custom policy and organization-Files/Custom definition.js"}}'
+  routing:
+    success: ../Set extidentity.role
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: extidentity.role
+    attributeValue: ${roleName}
+    name: Set extidentity.role
+  routing:
+    success: ../Set extidentity.organization
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: PortalOrganizationReadFilter
+  fields:
+    idSelector: ${organizationName}
+    selects: Name
+    targetAttribute: extidentity.organization
+    name: Set extidentity.organization

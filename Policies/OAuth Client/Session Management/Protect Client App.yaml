@@ -1,0 +1,48 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Call 'Check/Create Session Cookie'
+  name: Protect Client App
+  description: ""
+children:
+- type: CircuitDelegateFilter
+  fields:
+    circuitPK: /Policies/OAuth Client/Session Management/Check/Create Session Cookie
+    name: Call 'Check/Create Session Cookie'
+  routing:
+    success: ../Get User Info from Store
+  logging:
+    fatal: 'Error in calling policy shortcut circuit. Error: ${circuit.exception}'
+    failure: Failed in calling policy shortcut
+    success: Success in calling policy shortcut
+- type: IsCachedAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/HTTP Sessions
+    keyAttributeName: authentication.subject.id
+    name: Get User Info from Store
+  routing:
+    success: ../Call Internal Service
+    failure: ../Redirect to Login Page
+  logging:
+    fatal: 'Error while looking for key in the  message attribiute cache. Error: ${circuit.exception}'
+    failure: Failure while looking for key in the message attribute cache.
+    success: Found the key in the message attribute cache.
+- type: ProtocolDelegateFilter
+  fields:
+    name: Call Internal Service
+  logging:
+    fatal: 'Error in calling protocol. Error: ${circuit.exception}'
+    failure: Failed in calling protocol
+    success: Success in calling protocol
+  children:
+  - type: TransferAttribute
+    fields:
+      name: authentication.subject.id
+      value: openid.sub
+- type: RedirectFilter
+  fields:
+    httpResponseStatus: 302
+    url: /login/
+    outputContentType: text/html
+    content: login redirect
+    name: Redirect to Login Page

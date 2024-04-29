@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Buypass Class 3 Root CA, O=Buypass AS-983163327, C=NO
+  content: '{{file "CN=Buypass Class 3 Root CA, O=Buypass AS-2086724183-cert.pem"}}'

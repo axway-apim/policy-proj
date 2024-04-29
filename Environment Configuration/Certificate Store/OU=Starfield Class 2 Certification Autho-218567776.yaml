@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: OU=Starfield Class 2 Certification Authority, O="Starfield Technologies, Inc.", C=US
+  content: '{{file "OU=Starfield Class 2 Certification Autho-218567776-cert.pem"}}'

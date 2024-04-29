@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=SSL.com EV Root Certification Authority ECC, O=SSL Corporation, L=Houston, ST=Texas, C=US
+  content: '{{file "CN=SSL.com EV Root Certification Authori-1723657620-cert.pem"}}'

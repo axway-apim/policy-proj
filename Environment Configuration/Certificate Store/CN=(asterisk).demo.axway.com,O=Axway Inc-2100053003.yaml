@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=*.demo.axway.com,O=Axway Inc.,L=Phoenix,ST=Arizona,C=US
+  content: '{{file "CN=(asterisk).demo.axway.com,O=Axway Inc-2100053003-cert.pem"}}'

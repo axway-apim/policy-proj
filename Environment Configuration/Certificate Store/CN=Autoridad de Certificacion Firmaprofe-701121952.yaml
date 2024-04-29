@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Autoridad de Certificacion Firmaprofesional CIF A62634068, C=ES
+  content: '{{file "CN=Autoridad de Certificacion Firmaprofe-701121952-cert.pem"}}'

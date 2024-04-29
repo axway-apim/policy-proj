@@ -1,0 +1,6 @@
+---
+type: KPSCassandraDataSource
+fields:
+  name: Cassandra Storage
+  description: Cassandra Storage
+  impl: null

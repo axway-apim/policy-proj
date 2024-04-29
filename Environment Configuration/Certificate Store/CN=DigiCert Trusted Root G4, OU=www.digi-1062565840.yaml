@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=DigiCert Trusted Root G4, OU=www.digicert.com, O=DigiCert Inc, C=US
+  content: '{{file "CN=DigiCert Trusted Root G4, OU=www.digi-1062565840-cert.pem"}}'

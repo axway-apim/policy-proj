@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Izenpe.com, O=IZENPE S.A., C=ES
+  content: '{{file "CN=Izenpe.com, O=IZENPE S.A., C=ES-cert.pem"}}'

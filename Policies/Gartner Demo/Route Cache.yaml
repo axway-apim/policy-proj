@@ -1,0 +1,119 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Is GET
+  name: Route Cache
+  description: ""
+children:
+- type: SelectorFilter
+  fields:
+    expression: ${http.request.verb.equalsIgnoreCase("GET")}
+    name: Is GET
+  routing:
+    success: '../Create Cache key - GET '
+- type: CreateMessageKeyFilter
+  fields:
+    uniqueAttributeName: http.request.uri
+    name: 'Create Cache key - GET '
+  routing:
+    success: ../Trace Filter
+  logging:
+    fatal: 'Error during message creation of message key from attribute. Error: ${circuit.exception}'
+    failure: Failure during creationo of message key from attribute.
+    success: Message key created from attribute.
+- type: TraceFilter
+  fields:
+    traceMsg: ""
+    name: Trace Filter
+  routing:
+    success: ../Is cached?
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: IsCachedAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/ResponseCache
+    name: Is cached?
+  routing:
+    success: ../Reflect Message
+    failure: ../Connect to URL
+  logging:
+    fatal: 'Error while looking for key in the  message attribiute cache. Error: ${circuit.exception}'
+    failure: Failure while looking for key in the message attribute cache.
+    success: Found the key in the message attribute cache.
+- type: Reflector
+  fields:
+    name: Reflect Message
+  routing:
+    success: ../Is v2?
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: QueryStringAttrContentFilter
+  fields:
+    name: Is v2?
+  routing:
+    success: ../Set Service context
+    failure: ../True Filter
+  logging:
+    fatal: 'Error occurred while content checking query string attributes. Error: ${circuit.exception}'
+    failure: Query string attribute content check failed
+    success: Query string attribute content check passed
+  children:
+  - type: AttributeRegularExpression
+    fields:
+      attributeName: version
+      required: true
+      onceOffRegularExpression: \b2\b
+- type: ServiceContextFilter
+  fields:
+    serviceName: petstore - guinea pig
+    metricsMask: 1
+    name: Set Service context
+  routing:
+    success: ../True Filter
+- type: TrueFilter
+  fields:
+    name: True Filter
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: ConnectToURLFilter
+  fields:
+    url: ${destinationURL}
+    caCerts: []
+    ssloptions:
+    - nosslv3
+    - notlsv1
+    - noSslRenegotiation
+    - notlsv1_1
+    name: Connect to URL
+  routing:
+    success: ../Evaluate Selector
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: SelectorFilter
+  fields:
+    expression: ${http.response.status == 200}
+    name: Evaluate Selector
+  routing:
+    success: ../Cache attribute
+- type: CacheAttributeFilter
+  fields:
+    cacheToUse: /Libraries/Cache Manager/ResponseCache
+    name: Cache attribute
+  routing:
+    success: ../Is v2?
+  logging:
+    fatal: 'Error while caching the message attribute. Error: ${circuit.exception}'
+    failure: Failed to cache the message attribute.
+    success: Cached the message attribute.

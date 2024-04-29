@@ -1,0 +1,59 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Compare Attribute
+  name: Health Check LB
+  description: ""
+children:
+- type: CompareAttributeFilter
+  fields:
+    name: Compare Attribute
+  routing:
+    success: ../Set Message - OK
+    failure: ../Set Message - Under Maintenance
+  logging:
+    maskType: FILTER
+    mask: 1
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: apigw.maintenance.ongoing
+      matchType: IS
+      expression: "false"
+- type: ChangeMessageFilter
+  fields:
+    body: <status>ok</status>
+    outputContentType: text/xml
+    name: Set Message - OK
+  routing:
+    success: ../Reflect - OK
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    name: Reflect - OK
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message
+- type: ChangeMessageFilter
+  fields:
+    body: <status>under maintenance</status>
+    outputContentType: text/xml
+    name: Set Message - Under Maintenance
+  routing:
+    success: ../Reflect - Error
+  logging:
+    fatal: 'Error in setting the message. Error: ${circuit.exception}'
+    failure: Failed in setting the message
+    success: Success in setting the message
+- type: Reflector
+  fields:
+    httpResponseStatus: 503
+    name: Reflect - Error
+  logging:
+    fatal: 'Error occurred while echoing the message. Error: ${circuit.exception}'
+    failure: Failed to echo back the message
+    success: Successfully echoed back the message

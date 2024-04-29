@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=Amazon Root CA 4, O=Amazon, C=US
+  content: '{{file "CN=Amazon Root CA 4, O=Amazon, C=US-cert.pem"}}'

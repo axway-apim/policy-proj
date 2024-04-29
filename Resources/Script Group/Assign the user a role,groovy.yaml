@@ -1,0 +1,7 @@
+---
+type: Script
+fields:
+  name: Assign the user a role
+  description: Assigns the user an attribute called role with the value "Manager"
+  engineName: groovy
+  script: '{{file "Assign the user a role.groovy"}}'

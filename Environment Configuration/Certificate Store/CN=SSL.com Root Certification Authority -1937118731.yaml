@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=SSL.com Root Certification Authority ECC, O=SSL Corporation, L=Houston, ST=Texas, C=US
+  content: '{{file "CN=SSL.com Root Certification Authority -1937118731-cert.pem"}}'

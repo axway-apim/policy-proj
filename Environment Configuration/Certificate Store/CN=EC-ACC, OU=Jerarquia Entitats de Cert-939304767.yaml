@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: CN=EC-ACC, OU=Jerarquia Entitats de Certificacio Catalanes, OU=Vegeu https://www.catcert.net/verarrel (c)03, OU=Serveis Publics de Certificacio, O=Agencia Catalana de Certificacio (NIF Q-0801176-I), C=ES
+  content: '{{file "CN=EC-ACC, OU=Jerarquia Entitats de Cert-939304767-cert.pem"}}'

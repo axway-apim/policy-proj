@@ -1,0 +1,6 @@
+---
+type: Certificate
+fields:
+  dname: Samples Test CA
+  content: '{{file "Samples Test CA-cert.pem"}}'
+  key: '{{file "Samples Test CA-key.pem"}}'

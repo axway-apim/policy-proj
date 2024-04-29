@@ -1,0 +1,111 @@
+---
+type: FilterCircuit
+fields:
+  start: ./Set ASE Token
+  fault: ./Always Pass
+  name: ASE_Request_Connecter
+  description: ""
+children:
+- type: SetAttributeFilter
+  fields:
+    messageAttribute: ASE-Token
+    attributeValue: '{{ASESecurity.ASE_Request_Connecter.Set_ASE_Token.attributeValue}}'
+    name: Set ASE Token
+  routing:
+    success: ../Set headers
+  logging:
+    fatal: 'Error while setting the attribute value. Error: ${circuit.exception}'
+    failure: Failed to set the attribute value
+    success: Set the attribute value
+- type: JavaScriptFilter
+  fields:
+    engineName: groovy
+    requiredProperties: []
+    generatedProperties: []
+    consumedProperties: []
+    name: Set headers
+    script: '{{file "ASE_Request_Connecter-Files/Set headers.groovy"}}'
+  routing:
+    success: ../Trace Filter
+  logging:
+    fatal: 'Error while attempt to run script filter. Error: ${circuit.exception}'
+    failure: Failed script filter
+    success: Passed script filter
+- type: TraceFilter
+  fields:
+    traceMsg: '##### Trace -- ASE ##### '
+    traceBody: true
+    name: Trace Filter
+  routing:
+    success: ../Connect to ASE Request
+  logging:
+    fatal: 'Error while tracing the message properties. Error: ${circuit.exception}'
+    failure: Failed to trace the message properties
+    success: Traced the message properties
+- type: ConnectToURLFilter
+  fields:
+    url: '{{ASESecurity.ASE_Request_Connecter.Connect_to_ASE_Request.url}}'
+    method: POST
+    protoHeaders: ${newHeader}
+    caCerts: []
+    ciphers: FIPS:!SSLv3:!aNULL
+    ssloptions:
+    - nosslv3
+    - notlsv1
+    - nosslv2
+    - notlsv1_1
+    slaBreachAsFailure: true
+    connectionFailurePolicy: '/Policies/Policy Library/Return HTTP Error 401: Unauthorized'
+    name: Connect to ASE Request
+    category: /System/Filter Categories/attribute
+  routing:
+    success: ../Get Cookie
+    failure: ../Proceed
+  logging:
+    fatal: 'Error occurred while routing request to endpoint. Error: ${circuit.exception}'
+    failure: Failed to route request to endpoint.
+    success: Successfully routed request to endpoint
+  children:
+  - type: SaveToFileFilter
+    fields:
+      name: Persistence Details
+- type: RetrieveCookiesFilter
+  fields:
+    removeAfterGet: true
+    name: Get Cookie
+  routing:
+    success: ../Block Request?
+    failure: ../Block Request?
+- type: CompareAttributeFilter
+  fields:
+    matchingRule: MATCH_ONE
+    name: Block Request?
+  routing:
+    success: ../Abort
+    failure: ../Proceed
+  children:
+  - type: AttributeCompare
+    fields:
+      attrName: ${http.response.status}
+      matchType: IS
+      expression: 403
+- type: FalseFilter
+  fields:
+    name: Abort
+  logging:
+    fatal: 'False filter error. Error: ${circuit.exception}'
+    success: ""
+- type: TrueFilter
+  fields:
+    name: Proceed
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed
+- type: TrueFilter
+  fields:
+    name: Always Pass
+  logging:
+    fatal: 'True filter error. Error: ${circuit.exception}'
+    failure: ""
+    success: True filter passed

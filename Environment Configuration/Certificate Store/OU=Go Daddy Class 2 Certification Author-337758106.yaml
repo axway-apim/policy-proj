@@ -1,0 +1,5 @@
+---
+type: Certificate
+fields:
+  dname: OU=Go Daddy Class 2 Certification Authority, O="The Go Daddy Group, Inc.", C=US
+  content: '{{file "OU=Go Daddy Class 2 Certification Author-337758106-cert.pem"}}'

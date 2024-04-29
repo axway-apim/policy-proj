@@ -1,0 +1,15 @@
+---
+type: EventLog
+fields:
+  dirSizeMb: 4096
+  name: Event Log Configuration
+children:
+- type: CustomMessageAttribute
+  fields:
+    name: transactionId
+- type: CustomMessageAttribute
+  fields:
+    name: user-agent
+- type: CustomMessageAttribute
+  fields:
+    name: xForwardedFor

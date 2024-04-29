@@ -1,0 +1,41 @@
+---
+type: RequiredContentRegularExpressionGroup
+fields:
+  name: Required Content Regular Expressions
+children:
+- type: RegularExpression
+  fields:
+    name: Alphabetic
+    expression: ^[a-zA-Z\s]*$
+- type: RegularExpression
+  fields:
+    name: Numeric
+    expression: ^[0-9]+$
+- type: RegularExpression
+  fields:
+    name: Alphanumeric
+    expression: ^[a-zA-Z0-9\s]*$
+- type: RegularExpression
+  fields:
+    name: Date (yyyy-mm-dd)
+    expression: ^(\d{4})[- /.]((1[012])|(0?[1-9]))[- /.]((3[01])|([012]?[1-9])|([12]0))$
+- type: RegularExpression
+  fields:
+    name: Printable ASCII
+    expression: ^[\p{Print}\s]+$
+- type: RegularExpression
+  fields:
+    name: Distinguished Name
+    expression: ^([a-zA-Z\s]+=[a-zA-Z0-9\s]+)(,([a-zA-Z\s]+=[a-zA-Z0-9\s]+))*$
+- type: RegularExpression
+  fields:
+    name: Email Address
+    expression: ^[a-z0-9!#$%'*+/=?^_`{|}~-]+(\.[a-z0-9!#$%'*+/=?^_`{|}~-]+)*@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)*$
+- type: RegularExpression
+  fields:
+    name: Standard IP Address
+    expression: ^(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}$
+- type: RegularExpression
+  fields:
+    name: Floating Point Number
+    expression: ^[-+]?([0-9]*\.)?[0-9]+([eE][-+]?[0-9]+)?$

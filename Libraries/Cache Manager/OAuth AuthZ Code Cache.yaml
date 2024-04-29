@@ -1,0 +1,5 @@
+---
+type: Cache
+fields:
+  name: OAuth AuthZ Code Cache
+  eternal: true
